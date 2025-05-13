@@ -1,5 +1,5 @@
-import {View , StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import { Image } from 'expo-image'
+import { StyleSheet, View } from 'react-native'
 
 
 export default function ImageForEmptySpace(){
@@ -8,14 +8,14 @@ export default function ImageForEmptySpace(){
             display:'flex',
             alignItems:'center',
             justifyContent:'center',
-            paddingVertical:100
+            paddingVertical:40,
         }
     })
     return(
         <View style={style.image}>
             <Image
                 source={require('../assets/images/emptyState.png')}
-                style={{ width: 300, height: 200 }} 
+                style={{ width: 325, height: 325 }} 
             />
         </View>
     )

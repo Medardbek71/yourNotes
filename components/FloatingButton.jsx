@@ -1,29 +1,30 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View , Pressable, StyleSheet} from 'react-native';
+import Colors from '@/constants/Colors';
+import { Image } from 'expo-image';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-export default function FloatingButton({ name, onPress , isActive }) {
+export default function FloatingButton({ imgSrc, onPress , isActive }) {
+    
     const style = StyleSheet.create({
         pressable:{
             position:'absolute',
-            bottom:10,
-            right:40,
+            bottom:30,
+            right:50,
             height:70,
             width:70,
             display:'flex',
             justifyContent:'center',
             flexDirection:'row',
             alignItems:'center',
-            backgroundColor: isActive == false || undefined ? 'grey' : 'black',
+            backgroundColor: isActive === false || undefined ? 'grey' : Colors.background.tertiary,
             borderRadius:50
         }
     })
     return(
-        <Pressable onPress={isActive == false || undefined ? ()=>'' : onPress}>
+        <Pressable onPress={isActive === false || undefined ? ()=>'' : onPress}>
             <View style={style.pressable}>
-                <FontAwesome 
-                name={name}
-                size={30} 
-                color="white" 
+                <Image
+                    source={imgSrc}
+                    style={{ width: 60, height: 60 }}
                 />
             </View>
         </Pressable>

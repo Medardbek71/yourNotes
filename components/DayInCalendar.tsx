@@ -17,7 +17,7 @@ export default function DayInCalendar({ dayInformations , isToday}:Props){
         "Inter-Regular": require('../assets/fonts/Inter_28pt-Regular.ttf')
       })
       const nameOfDay = dayInformations.toDate().getDay()
-      if(dayInformations.isToday() == true) isToday = true
+      if(dayInformations.isToday() === true) isToday = true
     const style = StyleSheet.create ({
         date:{
             fontFamily:'Inter-Regular',
@@ -26,17 +26,17 @@ export default function DayInCalendar({ dayInformations , isToday}:Props){
             flexDirection:'column',
             justifyContent:'center',
             alignItems:'center',
-            color: isToday == true ? Colors.text.tertiary : Colors.text.secondary,
-            backgroundColor:isToday == true ? Colors.background.secondary : Colors.background.primary,
+            color: isToday === true ? Colors.text.tertiary : Colors.text.secondary,
+            backgroundColor:isToday === true ? Colors.background.secondary : Colors.background.primary,
             borderColor:Colors.background.secondary,
-            paddingVertical:5,
-            marginHorizontal:6,
+            marginTop:12,
+            marginHorizontal:7,
             width:42,
-            height:58
+            height:57
         }
     })
 
-      if(isToday == true )
+      if(isToday === true )
         return(
             <View style={style.date}>
                 <Text style={{color:'white'}}>{daysOfWeekMin[nameOfDay]}</Text>

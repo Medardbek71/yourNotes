@@ -1,11 +1,11 @@
-import AddNoteModal from "@/components/AddNoteModal";
 import CardWrapper from "@/components/CardWrapper";
 import FloatingButton from "@/components/FloatingButton";
 import Header from "@/components/Header";
 import ImageForEmptySpace from "@/components/ImageForEmptySpace";
+import Colors from "@/constants/Colors";
 import { noteContext } from "@/contexts/noteContext";
 import { useFonts } from "expo-font";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,18 +21,17 @@ export default function Index() {
         updateNotes:updateNotes
       }
 
-      const addNote =() => useRouter.push('/addNote')
+      const addNote =() => router.push('/AddNote')
 
     return (
       <noteContext.Provider value={noteContextValue}>
-        <SafeAreaView>
+        <SafeAreaView style={{backgroundColor:Colors.background.light}}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Header/>
             <CardWrapper setModalState={setModalState} />
-            <Text className="text-xl mx-4" style={{fontFamily:'Inter-Regular'}}>Agenda du jour</Text>  
+            <Text style={{fontFamily:'Inter-Regular',marginVertical:10,fontSize:18,marginLeft:10}}>Agenda du jour</Text>  
             <ImageForEmptySpace/>
-            <FloatingButton name={'pencil'} onPress={()=>addNote()}/>
-            <AddNoteModal modalIsOpen={modalIsOpen} setModalState={setModalState}/>
+            <FloatingButton imgSrc={require('../assets/images/fab.png')} onPress={()=>addNote()}/>
           </ScrollView>
         </SafeAreaView>
       </noteContext.Provider>

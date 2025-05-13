@@ -1,12 +1,22 @@
 import { currentDate, currentWeek } from "@/constants/calendar";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFonts } from "expo-font";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import DayInCalendar from "./DayInCalendar";
 
 export default function Header(){
     const [fontsLoaded] = useFonts({
         "Inter-Regular": require('../assets/fonts/Inter_28pt-Regular.ttf')
+      })
+
+      const style = StyleSheet.create({
+        calendar:{
+            width:'100%',
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'space-evenly',
+            marginVertical:10
+        }
       })
       
     return (
@@ -15,7 +25,7 @@ export default function Header(){
                 <Text style={{fontFamily:'Inter-Regular',width:350}}>{currentDate}</Text>
                 <Ionicons name="settings-outline" size={24} color="black" className="w-10"/>
             </View>
-            <View className="my-9 mx-4">
+            <View style={style.calendar}>
                 <ScrollView  horizontal={true} showsHorizontalScrollIndicator={false}>
                     {  
                         currentWeek.map((day,index)=>(
