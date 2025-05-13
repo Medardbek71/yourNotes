@@ -1,9 +1,9 @@
 import Colors from '@/constants/Colors';
 import { PressableIconsTypes } from '@/libs/types/PressableIconsTypes';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Image } from 'expo-image';
 import { Pressable, StyleSheet } from 'react-native';
 
-export default function PressableIcons({name,onPress,color,isActive}:PressableIconsTypes){
+export default function PressableIcons({imgSrc,onPress,isActive}:PressableIconsTypes){
 const style = StyleSheet.create({
     active:{
         width:'30%',
@@ -27,24 +27,12 @@ const style = StyleSheet.create({
         borderRadius:6
     }
 })
-
-    if(isActive === true){
-        return (
-        <Pressable onPress={onPress} style={style.active}>
-            <FontAwesome 
-                name={name} size={30}
-                color = 'white'
-            />
-        </Pressable>
-    ) 
-    }else{
         return(
-        <Pressable style={style.disable} onPress={onPress}>
-            <FontAwesome 
-                name={name} size={30}
-                color= {color ? color : '#707B88'}
+        <Pressable onPress={onPress}>
+            <Image
+                source={imgSrc}
+                style={{width:24,height:24}}
             />
         </Pressable>  
         )
     }
-}

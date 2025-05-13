@@ -6,4 +6,5 @@ export interface PressableIconsTypes {
     color?: string,
     isActive?:boolean,
     isDisable?:boolean
+    imgSrc:string
 }

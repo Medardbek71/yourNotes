@@ -1,9 +1,8 @@
-import { View, TextInput , TouchableOpacity} from 'react-native'
-import React from 'react'
-import PressableIcons from "./PressableIcons";
 import { router } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { TextInput, View } from 'react-native';
+import PressableIcons from "./PressableIcons";
+
 
 const NoteHeader = ({saveNote,isOpen,setIsOpen,noteIsEmpty}) => {
     const [ noteTitle , setNoteTitle ] = useState('note sans titre')
@@ -17,34 +16,25 @@ const NoteHeader = ({saveNote,isOpen,setIsOpen,noteIsEmpty}) => {
     }
 
   return (
-        <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',width:'100%', marginBottom:25}}>
-            <View style={{display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'row',width:'70%'}}>
-                <View>
-                    <PressableIcons name={'chevron-left'} onPress={backButton} color="black"/>
+        <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between',width:'95%', marginBottom:2}}>
+            <View style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexDirection:'row',width:'100%'}}>
+                <View style={{width:'10%',display:'flex',flexDirection:'row',justifyContent:'center'}}>
+                    <PressableIcons imgSrc={require('../assets/images/iconLeft.png')} onPress={backButton} color="black"/>
                 </View>
-                <TextInput 
-                    className="px-4 w-9/12 text-xl"
-                    style={{fontFamily:'Inter-Regular'}}
-                    onChangeText={(text)=>setNoteTitle(text)}
-                    value={noteTitle}
+                <View style={{width:'70%',paddingLeft:10}}>
+``                  <TextInput 
+                        style={{fontFamily:'Inter-Regular',paddingHorizontal:1}}
+                        onChangeText={(text)=>setNoteTitle(text)}
+                        value={noteTitle}
                     />
-            </View>
-            <View style={{width:'30%',display:'flex',justifyContent:'space-around',flexDirection:'row'}}>
-                <View>
-                    <PressableIcons name={'sticky-note-o'} color="black" onPress={handleSubModal}/>
                 </View>
-                <View style={{display:'flex',justifyContent:'center',alignContent:'center'}}>
-                    {
-                        noteIsEmpty == true
-                        ?
-                        <TouchableOpacity className="flex-row items-center" onPress={''}>
-                            <FontAwesome name={'check'} size={30} color = '#b9bcbe'/>
-                        </TouchableOpacity>  
-                        :
-                        <TouchableOpacity className="flex-row items-center" onPress={saveNote}>
-                            <FontAwesome name={'check'} size={30} color = 'black'/>
-                        </TouchableOpacity>
-                    }
+            <View style={{width:'20%',display:'flex',justifyContent:'space-around',flexDirection:'row'}}>
+                <View>
+                    <PressableIcons  imgSrc={require('../assets/images/trailingIcon2.png')} onPress={handleSubModal}/>
+                </View>
+                <View>
+                    <PressableIcons imgSrc={require('../assets/images/trailingIcon.png')} onPress={handleSubModal}/>
+                </View>
                 </View>
             </View>
         </View>
