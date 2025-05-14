@@ -47,11 +47,10 @@ const { updateNotes , notes } = noteContext
           noteType === 'normal'
       ? 
       <TextInput 
-          className="m-8"
           multiline={true}
           numberOfLines={4}  
           placeholder="Ecrivez votre note ici"
-          style={{fontFamily:'Inter-Regular', height:100 , textAlignVertical:'top',fontSize:20,flex:'1'}}
+          style={{fontFamily:'Inter-Regular', height:100 , textAlignVertical:'top',fontSize:20,flex:'1',marginTop:20,width:'95%'}}
           onChangeText={(text) => setNoteContent(text)}
           value={noteContent}
       />

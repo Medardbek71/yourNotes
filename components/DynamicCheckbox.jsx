@@ -1,5 +1,6 @@
-import { View, TextInput, StyleSheet, KeyboardAvoidingView, Platform, Button, TouchableOpacity, Text, ScrollView } from 'react-native'
-import { CheckBox } from 'react-native-elements'
+import Colors from '@/constants/Colors'
+import Checkbox from 'expo-checkbox'
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 export default function DynamicCheckbox({items, setItems}) {
   const handleTextChange = (text, id) => {
@@ -42,22 +43,20 @@ export default function DynamicCheckbox({items, setItems}) {
         items.map(item => (
           <View key={item.id} style={styles.itemContainer}>
             <View style={styles.checkboxWrapper}>
-              <CheckBox
-                checked={item.checked}
-                uncheckedColor='black'
-                checkedColor='black'
-                onPress={() => handleToggle(item.id)}
+              <Checkbox
+                value={item.checked}
+                onValueChange={() => handleToggle(item.id)}
+                color={item.checked === true ? Colors.background.secondary : undefined}
                 containerStyle={styles.checkbox}
               />
+              
             </View>
-            <View style={styles.textInputWrapper}>
               <TextInput
-                style={styles.input}
+                style={[styles.input]}
                 value={item.text}
                 multiline={true}
                 onChangeText={(text) => handleTextChange(text, item.id)}
               /> 
-            </View>
             <TouchableOpacity 
               style={styles.addButton}
               onPress={() => addItemAfter(item.id)}
@@ -81,12 +80,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   itemContainer: {
+    display:'flex',
     flexDirection: 'row',
-    alignItems: 'flex-start',  // Alignement en haut pour les champs multilignes
+    justifyContent:'center',
+    alignItems: 'center',
     marginBottom: 8,
   },
   checkbox: {
-    marginRight: 0,
     marginLeft: 0,
     padding: 0,
     position:'relative',
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     width:'10%',
   },
   textInputWrapper:{
-    width:'75%',  // Réduit pour faire de la place au bouton
+    width:'75%',
   },
   addButton: {
     width: '10%',

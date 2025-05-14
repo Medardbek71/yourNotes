@@ -33,7 +33,7 @@ const NoteHeader = ({saveNote,isOpen,setIsOpen,noteIsEmpty}) => {
                     <PressableIcons  imgSrc={require('../assets/images/trailingIcon2.png')} onPress={handleSubModal}/>
                 </View>
                 <View>
-                    <PressableIcons imgSrc={require('../assets/images/trailingIcon.png')} onPress={handleSubModal}/>
+                    <PressableIcons imgSrc={require('../assets/images/trailingIcon.png')} onPress={saveNote}/>
                 </View>
                 </View>
             </View>

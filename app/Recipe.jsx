@@ -87,6 +87,8 @@ export default function Recipe() {
       flexDirection:'column',
       justifyContent:'center',
       width:'90%',
+      backgroundColor:'yellow'
+
     }
   })
   
@@ -154,13 +156,13 @@ export default function Recipe() {
             multiline={true}
             numberOfLines={4}  
             placeholder="Ecrivez votre note ici"
-            style={{fontFamily: 'Inter-Regular', height: 100, textAlignVertical: 'top', fontSize: '20px', flex: '1', width: '100%'}}
+            style={{fontFamily: 'Inter-Regular', height: 100, textAlignVertical: 'top', fontSize: 20, flex: '1', width: '100%'}}
             onChangeText={(text) => setRecipeInstruction(text)}
             value={instruction}
             />
         </View>
       </View>
-        <FloatingButton name={ screenType === 'noteList' ? 'shopping-cart' : 'check'} onPress={handlePress}/>
+      <FloatingButton name={ screenType === 'noteList' ? 'shopping-cart' : 'check'} onPress={handlePress}/>
     </View>
   )
 }

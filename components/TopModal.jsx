@@ -9,12 +9,10 @@ export default function TopModal({setNoteType}){
     const [isActive3,toggleButtonState3] = useState(false)
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve,ms))
     const handlePress1 = () => {
-        alert('boutton 1 appuyer')
         toggleButtonState1(true)
         setNoteType('normal')
     }
     const handlePress2 = () => {
-        alert('boutton 2 appuyer')
         toggleButtonState2(true)
         setNoteType('checklist')
     }
@@ -56,7 +54,7 @@ export default function TopModal({setNoteType}){
                 toggleButtonState1(false)
                 toggleButtonState2(false)
                 toggleButtonState3(true)
-                router.push('/recipe')
+                router.push('/Recipe')
                 
             break;
             default:
@@ -64,20 +62,18 @@ export default function TopModal({setNoteType}){
             break;
         }
     },[isActive3])
-    console.log(isActive1)
-    console.log(isActive2)
-    console.log(isActive3)
+
 
     return(
         <View style={{display:'flex',flexDirection:'row',marginTop:18.5,marginHorizontal:22}}>
             <Pressable onPress={()=>handlePress1()}>
-                <NotetypeTabs imgSrc={require('../assets/images/trailingIcon2.png')} isActive={isActive1}/>
+                <NotetypeTabs imgSrc={ isActive1 === false ? require('../assets/images/trailingIcon2.png') : require('../assets/images/iconWrapperLeft_white.png')} isActive={isActive1} name={'Notes'}/>
             </Pressable>
             <Pressable onPress={()=>handlePress2()}>
-                <NotetypeTabs imgSrc={require('../assets/images/checklist_dark.png')} isActive={isActive1} onPress={()=>handlePress2}/>
+                <NotetypeTabs imgSrc={ isActive2 === false ? require('../assets/images/checklist_dark.png') : require('../assets/images/checklist_white.png') } isActive={isActive2}  name={'Checklist'}/>
             </Pressable>
-            <Pressable onPress={()=>handlePress3}>
-                <NotetypeTabs imgSrc={require('../assets/images/cookerIcon_inactive.png')} isActive={isActive1} onPress={()=>handlePress3}/>
+            <Pressable onPress={()=>handlePress3()}>
+                <NotetypeTabs imgSrc={require('../assets/images/cookerIcon_inactive.png')} isActive={isActive3}  name={'Recettes'}/>
             </Pressable>
         </View>
     )
