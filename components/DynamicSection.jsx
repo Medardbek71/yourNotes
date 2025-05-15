@@ -1,3 +1,4 @@
+import Colors from '@/constants/Colors'
 import React, { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 
@@ -25,17 +26,20 @@ const DynamicSection = ({ ingredientList , setIngredientList , sectionName , set
     }
 
     return (
-        <View style={{width:'95%'}} >
-            <TextInput
-                onChangeText={(text)=>setSectionName(text)}
-                value={sectionName}
-                placeholder='enter le nom de votre section'
-            />
+        <View style={{width:'95%'}}>
+            <View style={{display:'flex',flexDirection:'row',alignItems:'center'}}>
+                <Text style={{color:Colors.icons.disabled}}> ▶ </Text>
+                <TextInput
+                    onChangeText={(text)=>setSectionName(text)}
+                    value={sectionName}
+                    placeholder='enter le nom de votre section'
+                />
+            </View>
         {
             ingredientList.map((ingredient)=>{
                 return(
                     <View key={ingredient.id} style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text> ● {ingredient.name}</Text>
+                        <Text style={{marginLeft:16}}> ● {ingredient.name}</Text>
                         <Pressable onPress={()=> handleDeletion(ingredient.id)}>
                             <Text>—</Text>
                         </Pressable>
@@ -43,9 +47,9 @@ const DynamicSection = ({ ingredientList , setIngredientList , sectionName , set
                 )
             })
         }
-        <View style={{display:'flex',flexDirection:'row'}}>
+        <View style={{display:'flex',flexDirection:'row', alignItems:'center',marginLeft:16}}>
             <Pressable onPress={()=>addIngredient()}>
-               <Text>+</Text>
+               <Text>+  </Text>
             </Pressable>
             <TextInput 
                 value={ingredientName}

@@ -1,16 +1,17 @@
+import NoteHeader from '@/components/NoteHeader';
+import RecipeNoteType from '@/components/RecipeNoteType';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import DynamicSection from '../components/DynamicSection';
 import FloatingButton from '../components/FloatingButton';
-import NoteHeader from '../components/NoteHeader';
-import RecipeNoteType from '../components/RecipeNoteType';
 
 export default function Recipe() {
   const [recipeName, setRecipeName] = useState('je ne sais pas ce que je vais écrire ici')
   const [noteIsEmpty, setNoteIsEmpty] = useState(true)
   const [recipeIsEmpty, setRecipeState] = useState(true)
-  const [ingredientIsActive, setIngredient] = useState(true)
+  const [ingredientIsActive, setIngredientIsActive] = useState(true)
   const [instructionIsActive, setInstruction] = useState(false)
   const [instruction, setRecipeInstruction] = useState('')
   const [isOpen, setIsOpen] = useState(true)
@@ -60,7 +61,7 @@ export default function Recipe() {
     };
   }
 
-  const handlePress = ()=>{
+  const handlePress = ()=>{alert('je suis un pain beurre au chocolat')
     let finalSection = [...sectionList]
     if(currentSectionRef.current.title.trim() !== ''){
       finalSection = [...finalSection , currentSectionRef.current]
@@ -72,6 +73,14 @@ export default function Recipe() {
     })
   }
   const style = StyleSheet.create({
+    container:{
+      display: screenType === 'noteList' ? 'flex' : 'none',
+      flexDirection:'column',
+      justifyContent:'center',
+      width:'90%',
+      flex:1,
+      backgroundColor:'yellow',
+    },
     textInput: {
       width: '80%',
       marginVertical: '2%',
@@ -79,25 +88,16 @@ export default function Recipe() {
     },
     dynamicSection: {
       marginTop: 20,
-      width: '80%',
-      display: ingredientIsActive === false ? 'none' : 'flex' 
+      width: '90%',
+      display: ingredientIsActive === false ? 'none' : 'flex' ,
     },
-    container:{
-      display: screenType === 'noteList' ? 'flex' : 'none',
-      flexDirection:'column',
-      justifyContent:'center',
-      width:'90%',
-      backgroundColor:'yellow'
-
-    }
   })
   
   return (
-    <View>
-      <Text>Chevre</Text>
-      <View style={style.container}> 
+    <SafeAreaView style={{flex:1}}>
+      <View style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-start'}}> 
         <NoteHeader 
-          isOpen={isOpen} 
+          isOpen={isOpen}   
           setIsOpen={setIsOpen}
           saveNote={''}
           noteIsEmpty={noteIsEmpty}
@@ -105,26 +105,24 @@ export default function Recipe() {
         {
           isOpen === true && <RecipeNoteType 
             ingredientIsActive={ingredientIsActive}
-            setIngredient={setIngredient}
-            instructionIsActive={instructionIsActive}
-            setInstruction={setInstruction}
+            setIngredientIsActive={setIngredientIsActive}
           />
         }
         <View style={style.dynamicSection}>              
           {renderDynamicSection()}
-          
+
           {/* Afficher uniquement les sections qui ont été ajoutées à sectionList */}
           {sectionList.length > 0 && (
             sectionList.map((section) => {
               return(
                 <View key={section.id} style={{marginBottom: 20}}>
-                  <Text> ▶ {section.title}</Text>
+                  <Text style={{marginBottom:10}}> ▶ {section.title}</Text>
                   {
                     section.content && section.content.length > 0 && (
                       section.content.map((ingredient, idx) => {
                         return(
-                          <View key={ingredient.id || idx} style={{marginLeft: 30}}>
-                            <Text> ● {ingredient.name}</Text>
+                          <View key={ingredient.id || idx}>
+                            <Text style={{marginLeft:16,marginTop:1}}> ● {ingredient.name}</Text>
                           </View>
                         )
                       })
@@ -137,7 +135,6 @@ export default function Recipe() {
           
           <View>
             <View style={{display: 'flex', flexDirection: 'row'}}>
-              <Text> ▶ </Text>
               <DynamicSection 
                 setSectionsList={setSectionList}
                 ingredientList={ingredientList}
@@ -162,7 +159,7 @@ export default function Recipe() {
             />
         </View>
       </View>
-      <FloatingButton name={ screenType === 'noteList' ? 'shopping-cart' : 'check'} onPress={handlePress}/>
-    </View>
+        <FloatingButton imgSrc={ require('../assets/images/shopping-cart.png')} onPress={handlePress}/>
+    </SafeAreaView>
   )
 }

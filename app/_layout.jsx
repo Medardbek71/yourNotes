@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <>
     <StatusBar 
-      statusBarStyle = 'dark'
+      statusBarStyle = 'light'
       style={{statusBarStyle:'dark'}}
     />
     <Stack

@@ -31,7 +31,7 @@ export default function Index() {
             <CardWrapper setModalState={setModalState} />
             <Text style={{fontFamily:'Inter-Regular',marginVertical:10,fontSize:18,marginLeft:10}}>Agenda du jour</Text>  
             <ImageForEmptySpace/>
-            <FloatingButton imgSrc={require('../assets/images/fab.png')} onPress={()=>addNote()}/>
+            <FloatingButton imgSrc={require('../assets/images/pencil.png')} onPress={()=>addNote()}/>
           </ScrollView>
         </SafeAreaView>
       </noteContext.Provider>

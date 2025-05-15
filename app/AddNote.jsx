@@ -1,11 +1,10 @@
-import TopModal from '@/components/TopModal'
 import { noteContext } from '@/contexts/noteContext'
 import { useState } from 'react'
-import { TextInput, View } from 'react-native'
+import { TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DynamicCheckbox from '../components/DynamicCheckbox'
 import NoteHeader from '../components/NoteHeader'
-
+import TopModal from '@/components/TopModal'
 
 const AddNote = () => {
   const [ isOpen,toggleModal ] = useState(true)
@@ -34,30 +33,28 @@ const { updateNotes , notes } = noteContext
 }
   return (
     <SafeAreaView>
-    <View>
       <NoteHeader 
-          isOpen={isOpen}
-          noteIsEmpty={noteIsEmpty} 
-          setIsOpen={toggleModal} 
-          saveNote={saveNote}
+        isOpen={isOpen}
+        noteIsEmpty={noteIsEmpty} 
+        setIsOpen={toggleModal} 
+        saveNote={saveNote}
       />
 
       { isOpen === true && <TopModal setNoteType={setNoteType} /> }
       {
-          noteType === 'normal'
+        noteType === 'normal'
       ? 
       <TextInput 
-          multiline={true}
-          numberOfLines={4}  
-          placeholder="Ecrivez votre note ici"
-          style={{fontFamily:'Inter-Regular', height:100 , textAlignVertical:'top',fontSize:20,flex:'1',marginTop:20,width:'95%'}}
-          onChangeText={(text) => setNoteContent(text)}
-          value={noteContent}
+        multiline={true}
+        numberOfLines={4}  
+        placeholder="Ecrivez votre note ici"
+        style={{fontFamily:'Inter-Regular', height:100 , textAlignVertical:'top',fontSize:20,flex:'1',marginTop:20,width:'95%'}}
+        onChangeText={(text) => setNoteContent(text)}
+        value={noteContent}
       />
       : 
-          <DynamicCheckbox items={items} setItems={setItems}/>
+        <DynamicCheckbox items={items} setItems={setItems}/>
       }
-    </View>
   </SafeAreaView>
   )
 }
