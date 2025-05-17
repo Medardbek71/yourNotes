@@ -1,6 +1,5 @@
 import NoteHeader from '@/components/NoteHeader';
 import RecipeNoteType from '@/components/RecipeNoteType';
-import Colors from '@/constants/Colors';
 import { Checkbox } from 'expo-checkbox';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -23,6 +22,7 @@ export default function Recipe() {
   const [dynamicSectionCounter, setDynamicSectionCounter] = useState(0)
   const [screenType , setScreenType ] = useState('noteList') 
   const [displaySections , setDisplaySections ] = useState([])
+  const [someItemsAreChecked , setSomeItemsAreChecked ] = useState(false)
 //   const [alertIsVisible , setAlertIsVisible ] = useState(false)
   
   const renderDynamicSection = () => {
@@ -89,9 +89,23 @@ export default function Recipe() {
           }
           setDisplaySections(updatedSections)
   }
-
-
-
+  useEffect(()=>{
+    const checkIfSomeCheckboxAreChecked = ()=>{
+      let checkboxIsChecked = []
+      for (const section of displaySections) {
+        for (const item of section['content']) {
+          checkboxIsChecked += item.checkboxState  
+        }
+      }
+      if(checkboxIsChecked.includes('true')){
+        setSomeItemsAreChecked(true)
+      }else{
+        setSomeItemsAreChecked(false)
+      }
+    }
+    checkIfSomeCheckboxAreChecked()
+  },[displaySections])
+        
   const style = StyleSheet.create({
     container:{
       display: screenType === 'noteList' ? 'flex' : 'none',
@@ -112,30 +126,47 @@ export default function Recipe() {
       display: ingredientIsActive === false ? 'none' : 'flex' ,
     },
     checkbox :{
+      marginLeft:16,
+      
+    },
+    label:{
+      marginHorizontal:12,
+    },
+    ingredient:{
       display:'flex',
       flexDirection:'row',
-      marginHorizontal:8
+      marginVertical:4
+    },
+    checkboxView:{
+      width:'100%'
     }
   })
-
+  
   return (
     <SafeAreaView style={{flex:1}}>
       <View style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-start'}}> 
-        <NoteHeader 
+        { screenType === 'noteList' && <NoteHeader 
           isOpen={isOpen}   
           setIsOpen={setIsOpen}
           saveNote={''}
           noteIsEmpty={noteIsEmpty}
-        />
+          />}
+          { screenType=== 'checklist' && <View style={{width:'100%',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}> 
+            <View style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+              <View><Text style={{fontSize:40,marginRight:10}}>×</Text></View>
+              <View><Text style={{fontWeight:'bold',fontSize:15}}>Select ingredients add to shopping list</Text></View>
+            </View>
+          </View>}
         {
           isOpen === true && <RecipeNoteType 
-            ingredientIsActive={ingredientIsActive}
-            setIngredientIsActive={setIngredientIsActive}
+          ingredientIsActive={ingredientIsActive}
+          setIngredientIsActive={setIngredientIsActive}
+          disabled={ screenType === 'checklist' ? true : false }
           />
         }
         {
           screenType === 'noteList' ? 
-        <View style={style.dynamicSection}>              
+          <View style={style.dynamicSection}>              
           {renderDynamicSection()}
 
           {/* Afficher uniquement les sections qui ont été ajoutées à sectionList */}
@@ -176,23 +207,24 @@ export default function Recipe() {
           </View>
         </View>
           : 
-          <View>
-          <Text>×Select ingredient add to shopping list</Text>
+          <View style={{width:'90%'}}>
           {
+            
             displaySections.map(section => {
               return(
-                <View key={section.id}>
-                  <Text style={{fontWeight:'bold'}}>▶ {section.title}</Text>
+                <View style={style.checkboxView} key={section.id}>
+                  <Text style={{fontWeight:'bold',marginTop:8}}>▶ {section.title}</Text>
                   {
                     section.content.map((item =>{
                       return(
-                        <Pressable key={item.id} style={style.checkbox} onPress={()=>toggleCheckboxState(item.id)}>
+                        <Pressable key={item.id} style={style.ingredient} onPress={()=>toggleCheckboxState(item.id)}>
                           <Checkbox
                             value={item.checkboxState}
                             onValueChange={()=>toggleCheckboxState(item.id)}
-                            color={item.checked === true ? Colors.background.secondary : undefined}
-                          />
-                          <Text>{item.name}</Text>
+                            style={style.checkbox}
+                            color={item.checkboxState===true ?'black' : 'black'}
+                            />
+                          <Text style={style.label}>{item.name}</Text>
                         </Pressable>
                       )
                     }))
@@ -217,6 +249,7 @@ export default function Recipe() {
         <FloatingButton 
           imgSrc={ screenType === 'noteList' ? require('../assets/images/shopping-cart.png') : require('../assets/images/check.png')}
           onPress={()=>handlePress()}
+          isActive={ screenType === 'checklist' ? someItemsAreChecked : false}
         />
     </SafeAreaView>
   )

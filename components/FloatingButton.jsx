@@ -3,8 +3,8 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 export default function FloatingButton({ imgSrc, onPress , isActive }) {
-    if(isActive === undefined){
-        isActive = true
+    if(isActive ===  undefined ){
+        isActive = false
     }
     
     const style = StyleSheet.create({
@@ -18,12 +18,12 @@ export default function FloatingButton({ imgSrc, onPress , isActive }) {
             justifyContent:'center',
             flexDirection:'row',
             alignItems:'center',
-            backgroundColor: isActive === true ? Colors.background.tertiary :'grey',
+            backgroundColor: isActive === false && Colors.background.tertiary,
             borderRadius:50
         }
     })
     return(
-        <Pressable onPress={isActive === true ? onPress : null}>
+        <Pressable onPress={isActive === false ? onPress : null}>
             <View style={style.pressable}>
                 <Image
                     source={imgSrc}
