@@ -1,6 +1,6 @@
-import { View,Text , Pressable ,TextInput} from 'react-native'
-import { useState } from 'react'
-import React from 'react'
+import React, { useState } from 'react'
+import { Pressable, Text, TextInput, View } from 'react-native'
+
 
 const DynamicIngredientsList = ({sectionName}) => {
   const [ ingredientList , setIngredientsList ] = useState([])
@@ -8,7 +8,7 @@ const DynamicIngredientsList = ({sectionName}) => {
   const [ ingredientId , setIngredientId ] = useState(1)
 
   const handleAddNewIngredient = (ingredientName)=>{
-    if(ingredientName.trim() === '' || ingredientName.length == 0 ){
+    if(ingredientName.trim() === '' || ingredientName.length === 0 ){
       alert('Ajoutez un ingredient')
       return ;
     }
@@ -19,6 +19,7 @@ const DynamicIngredientsList = ({sectionName}) => {
     setIngredientsList([ ...ingredientList , newIngredient])
     setIngredientName('')
     setIngredientId(ingredientId + 1)
+    alert('le yaourt')
   }
 
   const handleDeletion = (id) => {

@@ -1,11 +1,15 @@
+import FloatingButton from '@/components/FloatingButton';
 import NoteHeader from '@/components/NoteHeader';
 import RecipeNoteType from '@/components/RecipeNoteType';
+import Colors from '@/constants/Colors';
 import { Checkbox } from 'expo-checkbox';
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DynamicSection from '../components/DynamicSection';
-import FloatingButton from '../components/FloatingButton';
+import SpecialFloatingButton from '../components/SpecialFoatingButton';
 
 export default function Recipe() {
   const [recipeName, setRecipeName] = useState('je ne sais pas ce que je vais écrire ici')
@@ -23,7 +27,6 @@ export default function Recipe() {
   const [screenType , setScreenType ] = useState('noteList') 
   const [displaySections , setDisplaySections ] = useState([])
   const [someItemsAreChecked , setSomeItemsAreChecked ] = useState(false)
-//   const [alertIsVisible , setAlertIsVisible ] = useState(false)
   
   const renderDynamicSection = () => {
     const sections = []
@@ -63,20 +66,63 @@ export default function Recipe() {
     };
   }
 
-  let finalSection = [...sectionList]
-
+  const goToShoppingList = ()=>{
+    let checkedIngredient = []
+    for (const section of displaySections) {
+      for (const item of section.content) {
+        if(item.checkboxState === true){
+          checkedIngredient += item
+        }
+      }
+    }
+    router.push({
+      pathname:'/ShoppingList',
+      params:{'checkedIngredient':JSON.stringify(checkedIngredient)}
+    })
+  }
   const handlePress = ()=>{
-    if(currentSectionRef.current.title.trim() !== ''){
-      finalSection = [...finalSection , currentSectionRef.current]
-    }
-    setDisplaySections(finalSection)
+    const savedCurrentSectionId = currentSectionId
 
-    if(screenType === 'noteList'){
+    if (screenType === 'noteList') {
+      let finalSection = [...sectionList]
+      
+      if (currentSectionRef.current.title.trim() !== '') {
+        finalSection = [...finalSection, currentSectionRef.current]
+      }
+      
+      // Préserver les états de cases cochées lors des transitions entre écrans
+      const sectionsWithCheckboxState = finalSection.map(section => {
+        return {
+          ...section,
+          content: section.content.map(item => {
+            // Rechercher si cet élément existe déjà dans displaySections et a un état de case cochée
+            let checkboxState = false
+            
+            for (const existingSection of displaySections) {
+              const existingItem = existingSection.content.find(
+                existingItem => existingItem.id === item.id
+              )
+              
+              if (existingItem && existingItem.checkboxState) {
+                checkboxState = existingItem.checkboxState
+                break
+              }
+            }
+            
+            return {
+              ...item,
+              checkboxState: checkboxState || false
+            }
+          })
+        }
+      })
+      setDisplaySections(sectionsWithCheckboxState)
       setScreenType('checklist')
-    }
-    else{
+    } else {
+      // Si on passe de checklist à noteList, garder les données de displaySections intactes
       setScreenType('noteList')
     }
+    setCurrentSectionId(savedCurrentSectionId)
   }
 
   const toggleCheckboxState = (id)=>{
@@ -89,19 +135,18 @@ export default function Recipe() {
           }
           setDisplaySections(updatedSections)
   }
+  
   useEffect(()=>{
     const checkIfSomeCheckboxAreChecked = ()=>{
-      let checkboxIsChecked = []
       for (const section of displaySections) {
-        for (const item of section['content']) {
-          checkboxIsChecked += item.checkboxState  
+        for (const item of section.content) {
+          if(item.checkboxState === true){
+            setSomeItemsAreChecked(true)
+            return
+          }
         }
       }
-      if(checkboxIsChecked.includes('true')){
-        setSomeItemsAreChecked(true)
-      }else{
-        setSomeItemsAreChecked(false)
-      }
+      setSomeItemsAreChecked(false)
     }
     checkIfSomeCheckboxAreChecked()
   },[displaySections])
@@ -139,6 +184,16 @@ export default function Recipe() {
     },
     checkboxView:{
       width:'100%'
+    },
+    pressable:{
+      backgroundColor:Colors.background.tertiary,
+      width:'90%',
+      display:'flex',
+      flexDirection:'row',
+      justifyContent:'center',
+      alignItems:'center',
+      height:'5%',
+      borderRadius:150
     }
   })
   
@@ -151,7 +206,18 @@ export default function Recipe() {
           saveNote={''}
           noteIsEmpty={noteIsEmpty}
           />}
-          { screenType=== 'checklist' && <View style={{width:'100%',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}> 
+          { screenType=== 'noteList' ? 
+            someItemsAreChecked === true &&
+            <Pressable style={style.pressable} onPress={()=>goToShoppingList()}>
+              <View style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                <Text style={{color:Colors.background.primary}}>Added to the new shopping list.View here </Text>
+                <Image 
+                  source={require('../assets/images/chevron-right.png')}
+                  style={{width:16,height:16}}
+                />
+              </View>
+            </Pressable>
+          : <View style={{width:'100%',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}> 
             <View style={{display:'flex',flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
               <View><Text style={{fontSize:40,marginRight:10}}>×</Text></View>
               <View><Text style={{fontWeight:'bold',fontSize:15}}>Select ingredients add to shopping list</Text></View>
@@ -164,6 +230,7 @@ export default function Recipe() {
           disabled={ screenType === 'checklist' ? true : false }
           />
         }
+       { console.log(someItemsAreChecked)}
         {
           screenType === 'noteList' ? 
           <View style={style.dynamicSection}>              
@@ -246,11 +313,19 @@ export default function Recipe() {
             />
         </View>
       </View>
-        <FloatingButton 
-          imgSrc={ screenType === 'noteList' ? require('../assets/images/shopping-cart.png') : require('../assets/images/check.png')}
-          onPress={()=>handlePress()}
-          isActive={ screenType === 'checklist' ? someItemsAreChecked : false}
+      {
+        screenType === 'noteList' ? 
+        <FloatingButton
+        imgSrc={ require('../assets/images/shopping-cart.png')}
+        onPress={()=>handlePress()}
         />
+        : 
+        <SpecialFloatingButton 
+          imgSrc={require('../assets/images/check.png')}
+          onPress={()=>handlePress()}
+          toggledValue = {someItemsAreChecked}
+          />
+      }
     </SafeAreaView>
   )
 }

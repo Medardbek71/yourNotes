@@ -24,7 +24,7 @@ const DynamicSection = ({ ingredientList , setIngredientList , sectionName , set
             alert('Ajoutez un ingredient')
         }
     }
-
+        console.log(ingredientId)
     return (
         <View style={{width:'95%'}}>
             <View style={{display:'flex',flexDirection:'row',alignItems:'center'}}>
