@@ -1,4 +1,4 @@
-import {noteType} from '@/contexts/noteContext'
+import { noteType } from '@/contexts/NoteContext'
 
 export interface CardTypes {
     note: noteType

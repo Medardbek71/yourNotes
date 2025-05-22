@@ -1,6 +1,6 @@
 import Colors from '@/constants/Colors'
 import Checkbox from 'expo-checkbox'
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 
 export default function DynamicCheckbox({items, setItems}) {
   const handleTextChange = (text, id) => {
@@ -34,7 +34,7 @@ export default function DynamicCheckbox({items, setItems}) {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={{width:'100%'}}>
        <KeyboardAvoidingView
       behavior={Platform.OS === 'android' ? 'padding' : 'height'}
       style={styles.container}
@@ -57,12 +57,12 @@ export default function DynamicCheckbox({items, setItems}) {
                 multiline={true}
                 onChangeText={(text) => handleTextChange(text, item.id)}
               /> 
-            <TouchableOpacity 
+            <Pressable 
               style={styles.addButton}
               onPress={() => addItemAfter(item.id)}
             >
               <Text style={styles.addButtonText}>+</Text>
-            </TouchableOpacity>
+            </Pressable>
           
           </View>
         ))
@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
   itemContainer: {
     display:'flex',
     flexDirection: 'row',
-    justifyContent:'center',
-    alignItems: 'center',
     marginBottom: 8,
+    alignItems:'center',
+    width:'100%',
   },
   checkbox: {
     marginLeft: 0,

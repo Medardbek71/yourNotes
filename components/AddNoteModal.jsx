@@ -1,9 +1,9 @@
-import { Modal, TextInput, TouchableOpacity, View } from "react-native";
+import NoteHeader from '@/components/NoteHeader.jsx';
+import { noteContext } from '@/contexts/NoteContext';
 import { useContext, useEffect, useState } from "react";
-import TopModal from "./TopModal";
-import { noteContext } from '@/contexts/noteContext';
+import { Modal, TextInput } from "react-native";
 import DynamicCheckbox from "./DynamicCheckbox";
-import NoteHeader from '@/components/NoteHeader.jsx'
+import TopModal from "./TopModal";
 
 export default function AddNoteModal({ modalIsOpen ,setModalState }){
     const closeModal = ()=> (setModalState(false))
@@ -68,9 +68,9 @@ export default function AddNoteModal({ modalIsOpen ,setModalState }){
                 saveNote={saveNote}
             />
 
-            { isOpen == true && <TopModal setNoteType={setNoteType} /> }
+            { isOpen === true && <TopModal setNoteType={setNoteType} /> }
             {
-                noteType == 'normal'
+                noteType === 'normal'
             ? 
             <TextInput 
                 className="m-8"

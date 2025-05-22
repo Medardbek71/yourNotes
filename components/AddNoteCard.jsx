@@ -1,11 +1,11 @@
 import Colors from '@/constants/Colors';
-import { NoteContext } from '@/contexts/noteContext';
+import { NoteContext } from '@/contexts/NoteContext';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFonts } from "expo-font";
 import { router } from 'expo-router';
 import { useContext } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function AddNoteCard ({allNotesAreVisible , setAllNotesVisibility}){
 const [fontsLoaded] = useFonts({
@@ -35,6 +35,7 @@ const [fontsLoaded] = useFonts({
             borderRadius:6,
             fontFamily:'Inter-Regular',
             backgroundColor:Colors.background.primary,
+            
         },
         semiContainerWrapper:{
             width:171,
@@ -54,7 +55,7 @@ const [fontsLoaded] = useFonts({
 
     if(notes.length <= 3 || allNotesAreVisible === true ){
         return(
-            <TouchableOpacity onPress={handlePress}>
+            <Pressable onPress={handlePress}>
                 <View style={style.container} >
                     <View style={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'flex-start'}}>
                         <MaterialIcons name="add" size={60} color="black"/> 
@@ -63,23 +64,23 @@ const [fontsLoaded] = useFonts({
                         <Text className="text-xl" style={{fontFamily:'Inter-Regular'}}>Nouvelle note</Text>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </Pressable>
         )
     }
     else{
         return(
             <View style={style.semiContainerWrapper}>
                 <View style={style.semiContainer}>
-                    <TouchableOpacity onPress={showAllNotes}>
+                    <Pressable onPress={showAllNotes}>
                         <FontAwesome6 name="arrow-right-long" size={30} color="black" />
                         <Text>Voir toutes</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
                 <View style={style.semiContainer}>
-                    <TouchableOpacity onPress={handlePress}>
+                    <Pressable onPress={handlePress}>
                         <MaterialIcons name="add" size={40} color="black"/>
                         <Text>Nouvelle note</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </View>
         )

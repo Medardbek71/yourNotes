@@ -2,17 +2,17 @@ import FloatingButton from '@/components/FloatingButton';
 import NoteHeader from '@/components/NoteHeader';
 import RecipeNoteType from '@/components/RecipeNoteType';
 import Colors from '@/constants/Colors';
+import { TitleContext } from '@/contexts/TitleContext';
 import { Checkbox } from 'expo-checkbox';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DynamicSection from '../components/DynamicSection';
 import SpecialFloatingButton from '../components/SpecialFoatingButton';
 
 export default function Recipe() {
-  const [recipeName, setRecipeName] = useState('je ne sais pas ce que je vais écrire ici')
   const [noteIsEmpty, setNoteIsEmpty] = useState(true)
   const [recipeIsEmpty, setRecipeState] = useState(true)
   const [ingredientIsActive, setIngredientIsActive] = useState(true)
@@ -35,6 +35,8 @@ export default function Recipe() {
     }
     return sections
   }
+
+  const { recipeName , setRecipeName } = useContext(TitleContext)
   
   const currentSectionRef = useRef({
     id: currentSectionId ,
@@ -126,14 +128,14 @@ export default function Recipe() {
   }
 
   const toggleCheckboxState = (id)=>{
-      const updatedSections = JSON.parse(JSON.stringify(displaySections))
-      for (const sections of updatedSections) {
-          for (const item of sections.content) {
-              if(item.id === id)
-              item.checkboxState = !item.checkboxState
-            }
-          }
-          setDisplaySections(updatedSections)
+    const updatedSections = JSON.parse(JSON.stringify(displaySections))
+    for (const sections of updatedSections) {
+      for (const item of sections.content) {
+        if(item.id === id)
+          item.checkboxState = !item.checkboxState
+      }
+    }
+    setDisplaySections(updatedSections)
   }
   
   useEffect(()=>{
@@ -193,19 +195,24 @@ export default function Recipe() {
       justifyContent:'center',
       alignItems:'center',
       height:'5%',
-      borderRadius:150
+      borderRadius:150,
+      marginTop:15
     }
   })
   
   return (
     <SafeAreaView style={{flex:1}}>
       <View style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'flex-start'}}> 
-        { screenType === 'noteList' && <NoteHeader 
-          isOpen={isOpen}   
+         { 
+          screenType === 'noteList' && someItemsAreChecked === false && <NoteHeader 
+          isOpen={isOpen}
+          noteTitle={recipeName}
+          setNoteTitle={setRecipeName}
           setIsOpen={setIsOpen}
           saveNote={''}
           noteIsEmpty={noteIsEmpty}
-          />}
+          />
+          }
           { screenType=== 'noteList' ? 
             someItemsAreChecked === true &&
             <Pressable style={style.pressable} onPress={()=>goToShoppingList()}>

@@ -1,7 +1,9 @@
 import NoteHeader from '@/components/NoteHeader';
+import { NoteContext } from '@/contexts/NoteContext';
+import { TitleContext } from '@/contexts/TitleContext';
 import Checkbox from 'expo-checkbox';
 import { useGlobalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,6 +12,11 @@ const ShoppingList = () => {
   const parsingIngredient = JSON.parse(checkedIngredient)
   const [ shoppingList , setShoppingList ] = useState(parsingIngredient)
   const [ newIngredientName , setNewIngredientName ] = useState('')
+  const { notes , updateNotes } = useContext(NoteContext)
+
+    const saveNote = () =>{
+      updateNotes([...notes,shoppingList])
+    }
 
     const addNewIngredient = ()=>{
       if(newIngredientName.trim() !== ''){
@@ -35,9 +42,17 @@ const ShoppingList = () => {
       }
       setShoppingList(shoppingListCopy)
     } 
+    const { recipeName , setRecipeName } = useContext(TitleContext)
+
   return (
 <SafeAreaView style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-  <NoteHeader saveNote={null} isOpen={null}/>
+  <NoteHeader 
+    isOpen={null}
+    noteTitle={recipeName}
+    setNoteTitle={setRecipeName}
+    noteIsEmpty={false}
+    saveNote={()=>saveNote()}
+    />
   <View style={{width:'90%'}}>
   {
     shoppingList.map(ingredient => {

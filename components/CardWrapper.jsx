@@ -1,4 +1,4 @@
-import { NoteContext } from '@/contexts/noteContext'
+import { NoteContext } from '@/contexts/NoteContext'
 import { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 
@@ -10,18 +10,24 @@ export default function CardWrapper(){
     const style = StyleSheet.create({
         container:{
             height:'auto',
-            width:'100%',
-            paddingVertical:10,
+            width:'95%',
+            marginVertical:10,
+            display:'flex',
+            flexDirection:'row',
+            justifyContent:'center',
+            alignItems:'center',
+            borderRadius:12
         }
     })
     const {notes,updateNotes} = useContext(NoteContext) 
     console.log(notes , updateNotes)
     return( 
+        <View style={{display:'flex',flexDirection:'row',justifyContent:'center'}}>
         <View style={style.container}>
             <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-            >
+                >
                 {
                     notes.length < 3 || allNotesAreVisible === true
                     ?
@@ -41,8 +47,9 @@ export default function CardWrapper(){
                 <AddNoteCard 
                     allNotesAreVisible={allNotesAreVisible} 
                     setAllNotesVisibility={setAllNotesVisibility}
-                />
+                    />
             </ScrollView>
+                </View>
         </View>
     )
 }

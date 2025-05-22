@@ -4,8 +4,8 @@ import { typography } from '@/constants/typography';
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 // import { useContext } from 'react';
+import Checkbox from 'expo-checkbox';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { CheckBox } from "react-native-elements";
 
 export default function Card ({note}){
     // const noteContextValue = useContext(NoteContext)
@@ -28,7 +28,6 @@ export default function Card ({note}){
             color: note.type === 'normal' ? Colors.text.primary : Colors.text.tertiary,
             fontFamily:'Inter-Regular',
             fontWeight:'normal',
-            marginVertical:8,
             padding:5
         },
         content:{
@@ -36,13 +35,12 @@ export default function Card ({note}){
             fontFamily:'Inter-Regular',
             color: note.type === 'normal' ? Colors.text.primary : Colors.text.tertiary,
             lineHeight:typography.text.lg.lineHeight,
-            marginVertical:8,
             padding:5,
         },
         container:{
             width:171,
             height:200,
-            marginHorizontal:8,
+            marginRight:8,
             padding:8,
             borderRadius:6,
             lineHeight:100,
@@ -56,6 +54,8 @@ export default function Card ({note}){
         items:{
             display:'flex',
             flexDirection:'row',
+            alignItems:'center',
+            marginLeft:5
         },
         text:{
             fontSize:typography.text.lg.fontSize,
@@ -63,6 +63,7 @@ export default function Card ({note}){
             color: note.type === 'normal' ? Colors.text.primary : Colors.text.tertiary,
             lineHeight:typography.text.lg.lineHeight,
             marginVertical:2,
+            marginHorizontal:10,
             padding:3,
             display:'flex',
             alignItems:'center'
@@ -76,13 +77,13 @@ export default function Card ({note}){
                     <Text style={styles.content}>{note.content}</Text>
                 </View>
             : 
-            <View key={note.id}>
+            <View>
                 <Text style={styles.title}>{note.title}</Text>
                 {
                     note.content.slice(0,3).map(item => (
-                        <View style = {styles.checkboxCard} key={`${Date.now()}-item-${note.id}`}>
+                        <View style = {styles.checkboxCard} key={`item-${note.id}-${item.id}`}>
                             <View style={styles.items}>
-                                <CheckBox checked={item.checked} uncheckedColor='white' checkedColor='white' backgroundColor={'yellow'} containerStyle = {{padding:0,margin:0, display:'flex',flexDirection:'row', alignItems:'center'}} />
+                                <Checkbox value={item.checked} color={Colors.background.secondary  } />
                                 <Text style={styles.text}>{item.text}</Text>
                             </View>
                         </View>
@@ -90,7 +91,7 @@ export default function Card ({note}){
                 }
                 
                 { note.content.length > 3 && 
-                    <View style={{display:'flex',flexDirection:'row', justifyContent:'flex-start', alignItems:'center',marginTop:15,fontFamily:'Inter-Regular',color:'white'}}> <Text style={{fontFamily:'Inter-Regular',color:'white'}}> {numberOfItemsUnDisplay === 1 ?  <Text>{numberOfItemsUnDisplay} autre</Text> : <Text> {numberOfItemsUnDisplay} autres </Text> }  </Text></View>
+                    <View style={{display:'flex',flexDirection:'row', justifyContent:'flex-start', alignItems:'center',fontFamily:'Inter-Regular',color:'white'}}> <Text style={{fontFamily:'Inter-Regular',color:'white'}}> {numberOfItemsUnDisplay === 1 ?  <Text>{numberOfItemsUnDisplay} autre</Text> : <Text> {numberOfItemsUnDisplay} autres </Text> }  </Text></View>
                 }
                 </View>
             }
