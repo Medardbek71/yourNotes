@@ -1,14 +1,14 @@
 import Colors from '@/constants/Colors';
 import { typography } from '@/constants/typography';
-import { noteContext } from '@/contexts/noteContext';
+// import { NoteContext } from '@/contexts/noteContext';
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
-import { useContext } from 'react';
+// import { useContext } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { CheckBox } from "react-native-elements";
 
 export default function Card ({note}){
-    const noteContextValue = useContext(noteContext)
+    // const noteContextValue = useContext(NoteContext)
 
     const showNote = ()=>{
         router.push({
@@ -25,7 +25,7 @@ export default function Card ({note}){
     const styles = StyleSheet.create({
         title:{
             fontSize:typography.header.fontSize,
-            color: note.type == 'normal' ? Colors.text.primary : Colors.text.tertiary,
+            color: note.type === 'normal' ? Colors.text.primary : Colors.text.tertiary,
             fontFamily:'Inter-Regular',
             fontWeight:'normal',
             marginVertical:8,
@@ -34,7 +34,7 @@ export default function Card ({note}){
         content:{
             fontSize:typography.text.lg.fontSize,
             fontFamily:'Inter-Regular',
-            color: note.type == 'normal' ? Colors.text.primary : Colors.text.tertiary,
+            color: note.type === 'normal' ? Colors.text.primary : Colors.text.tertiary,
             lineHeight:typography.text.lg.lineHeight,
             marginVertical:8,
             padding:5,
@@ -60,7 +60,7 @@ export default function Card ({note}){
         text:{
             fontSize:typography.text.lg.fontSize,
             fontFamily:'Inter-Regular',
-            color: note.type == 'normal' ? Colors.text.primary : Colors.text.tertiary,
+            color: note.type === 'normal' ? Colors.text.primary : Colors.text.tertiary,
             lineHeight:typography.text.lg.lineHeight,
             marginVertical:2,
             padding:3,
@@ -76,21 +76,22 @@ export default function Card ({note}){
                     <Text style={styles.content}>{note.content}</Text>
                 </View>
             : 
-                <View>
-                     <Text style={styles.title}>{note.title}</Text>
-                    {
-                        note.content.slice(0,3).map(item => (
-                            <View style = {styles.checkboxCard}>
-                                <View style={styles.items}>
-                                    <CheckBox checked={item.checked} uncheckedColor='white' checkedColor='white' backgroundColor={'yellow'} containerStyle = {{padding:0,margin:0, display:'flex',flexDirection:'row', alignItems:'center'}} />
-                                    <Text style={styles.text}>{item.text}</Text>
-                                </View>
+            <View key={note.id}>
+                <Text style={styles.title}>{note.title}</Text>
+                {
+                    note.content.slice(0,3).map(item => (
+                        <View style = {styles.checkboxCard} key={`${Date.now()}-item-${note.id}`}>
+                            <View style={styles.items}>
+                                <CheckBox checked={item.checked} uncheckedColor='white' checkedColor='white' backgroundColor={'yellow'} containerStyle = {{padding:0,margin:0, display:'flex',flexDirection:'row', alignItems:'center'}} />
+                                <Text style={styles.text}>{item.text}</Text>
                             </View>
-                        ))
-                    }
-                    
-                    { note.content.length > 3 && 
-                    <View style={{display:'flex',flexDirection:'row', justifyContent:'flex-start', alignItems:'center',marginTop:15,fontFamily:'Inter-Regular',color:'white'}}> <Text style={{fontFamily:'Inter-Regular',color:'white'}}> {numberOfItemsUnDisplay == 1 ?  <Text>{numberOfItemsUnDisplay} autre</Text> : <Text> {numberOfItemsUnDisplay} autres </Text> }  </Text></View>}
+                        </View>
+                    ))
+                }
+                
+                { note.content.length > 3 && 
+                    <View style={{display:'flex',flexDirection:'row', justifyContent:'flex-start', alignItems:'center',marginTop:15,fontFamily:'Inter-Regular',color:'white'}}> <Text style={{fontFamily:'Inter-Regular',color:'white'}}> {numberOfItemsUnDisplay === 1 ?  <Text>{numberOfItemsUnDisplay} autre</Text> : <Text> {numberOfItemsUnDisplay} autres </Text> }  </Text></View>
+                }
                 </View>
             }
         </Pressable>

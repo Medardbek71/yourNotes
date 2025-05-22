@@ -11,11 +11,12 @@ export default function Header(){
 
       const style = StyleSheet.create({
         calendar:{
-            width:'100%',
+            width:'95%',
             display:'flex',
             flexDirection:'row',
-            justifyContent:'space-evenly',
-            marginVertical:10
+            justifyContent:'center',
+            alignItems:'center',
+            marginBottom:10
         }
       })
       
@@ -25,6 +26,8 @@ export default function Header(){
                 <Text style={{fontFamily:'Inter-Regular',width:350}}>{currentDate}</Text>
                 <Ionicons name="settings-outline" size={24} color="black" className="w-10"/>
             </View>
+            <View style={{display:'flex', flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+
             <View style={style.calendar}>
                 <ScrollView  horizontal={true} showsHorizontalScrollIndicator={false}>
                     {  
@@ -35,6 +38,7 @@ export default function Header(){
                         ))
                     }
                 </ScrollView>
+            </View>
             </View>
         </View>
     )

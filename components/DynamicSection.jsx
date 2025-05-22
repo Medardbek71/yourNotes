@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 
 const DynamicSection = ({ ingredientList , setIngredientList , sectionName , setSectionName }) => {
-    const [ ingredientId , setIngredientId ] = useState(1)
+    const [ ingredientId , setIngredientId ] = useState(Date.now())
     const [ ingredientName , setIngredientName ] = useState('')
     const handleDeletion = (id) => {
         setIngredientList(ingredientList.filter((ingredient => ingredient.id !== id)))

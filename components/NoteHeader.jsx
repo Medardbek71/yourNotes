@@ -1,11 +1,9 @@
 import { router } from 'expo-router';
-import React, { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import PressableIcons from "./PressableIcons";
 
 
-const NoteHeader = ({saveNote,isOpen,setIsOpen,noteIsEmpty}) => {
-    const [ noteTitle , setNoteTitle ] = useState('note sans titre')
+const NoteHeader = ({saveNote,isOpen,setIsOpen,noteTitle,setNoteTitle, noteIsEmpty}) => {
     const backButton = ()=> router.back()
     const handleSubModal = () => {
         if(isOpen === true){
@@ -26,14 +24,21 @@ const NoteHeader = ({saveNote,isOpen,setIsOpen,noteIsEmpty}) => {
                     style={{fontFamily:'Inter-Regular',paddingHorizontal:1}}
                     onChangeText={(text)=>setNoteTitle(text)}
                     value={noteTitle}
+                    placeholder='untitled'
                 />
             </View>
         <View style={{width:'20%',display:'flex',justifyContent:'space-around',flexDirection:'row'}}>
             <View>
-                <PressableIcons  imgSrc={require('../assets/images/trailingIcon2.png')} onPress={handleSubModal}/>
+                <PressableIcons  
+                    imgSrc={require('../assets/images/trailingIcon2.png')} 
+                    onPress={handleSubModal}
+                />
             </View>
-            <View>
-                <PressableIcons imgSrc={require('../assets/images/trailingIcon.png')} onPress={saveNote}/>
+            <View >
+                <PressableIcons 
+                    imgSrc={ noteIsEmpty === false ? require('../assets/images/trailingIcon.png') : require('../assets/images/trailingIcon_disable.png')}
+                    onPress={noteIsEmpty === false ? saveNote : null}
+                />
             </View>
             </View>
         </View>

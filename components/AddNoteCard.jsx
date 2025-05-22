@@ -1,5 +1,5 @@
 import Colors from '@/constants/Colors';
-import { noteContext } from '@/contexts/noteContext';
+import { NoteContext } from '@/contexts/noteContext';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFonts } from "expo-font";
@@ -46,7 +46,7 @@ const [fontsLoaded] = useFonts({
     const handlePress = () =>{
         router.push('/AddNote')
     }
-    const {notes} = useContext(noteContext)
+    const {notes} = useContext(NoteContext)
     const showAllNotes = () => ( 
         setAllNotesVisibility(true),
         console.log(allNotesAreVisible)

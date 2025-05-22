@@ -67,17 +67,17 @@ export default function Recipe() {
   }
 
   const goToShoppingList = ()=>{
-    let checkedIngredient = []
+    let checkedIngredients = []
     for (const section of displaySections) {
       for (const item of section.content) {
         if(item.checkboxState === true){
-          checkedIngredient += item
+          checkedIngredients.push(item)
         }
       }
     }
     router.push({
       pathname:'/ShoppingList',
-      params:{'checkedIngredient':JSON.stringify(checkedIngredient)}
+      params:{'checkedIngredient':JSON.stringify(checkedIngredients)}
     })
   }
   const handlePress = ()=>{
@@ -289,7 +289,7 @@ export default function Recipe() {
                             value={item.checkboxState}
                             onValueChange={()=>toggleCheckboxState(item.id)}
                             style={style.checkbox}
-                            color={item.checkboxState===true ?'black' : 'black'}
+                            color={'black'}
                             />
                           <Text style={style.label}>{item.name}</Text>
                         </Pressable>

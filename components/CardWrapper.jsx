@@ -1,14 +1,11 @@
-import Card from '@/components/Card'
-import { noteContext } from '@/contexts/noteContext'
+import { NoteContext } from '@/contexts/noteContext'
 import { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import AddNoteCard from './AddNoteCard'
 
-export default function CardWrapper({setModalState}){
-    const showNote = ()=> {
-        ''
-    }
-    const {notes} = useContext(noteContext)
+import AddNoteCard from './AddNoteCard'
+import Card from './Card'
+
+export default function CardWrapper(){
     const [allNotesAreVisible,setAllNotesVisibility] = useState(false)
     const style = StyleSheet.create({
         container:{
@@ -17,8 +14,9 @@ export default function CardWrapper({setModalState}){
             paddingVertical:10,
         }
     })
-    const reversedNotes = notes.reverse()
-    return(
+    const {notes,updateNotes} = useContext(NoteContext) 
+    console.log(notes , updateNotes)
+    return( 
         <View style={style.container}>
             <ScrollView
                 horizontal={true}
@@ -34,7 +32,7 @@ export default function CardWrapper({setModalState}){
                     ))
                     :
                     notes.slice(0,3).map((note,index)=>(
-                        <View key={Date.now+1}>
+                        <View key={Date.now()+1}>
                             <Card key={index} note={note}/>
                         </View>
                     )) 
