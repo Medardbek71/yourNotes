@@ -317,7 +317,7 @@ export default function Recipe() {
             style={{fontFamily: 'Inter-Regular', height: 100, textAlignVertical: 'top', fontSize: 20, flex: '1', width: '100%'}}
             onChangeText={(text) => setRecipeInstruction(text)}
             value={instruction}
-            />
+          />
         </View>
       </View>
       {
@@ -331,7 +331,7 @@ export default function Recipe() {
           imgSrc={require('../assets/images/check.png')}
           onPress={()=>handlePress()}
           toggledValue = {someItemsAreChecked}
-          />
+        />
       }
     </SafeAreaView>
   )

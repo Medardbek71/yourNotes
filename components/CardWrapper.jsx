@@ -27,27 +27,28 @@ export default function CardWrapper(){
             <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                >
-                {
-                    notes.length < 3 || allNotesAreVisible === true
-                    ?
-                    notes.map((note,index)=>(
-                        <View key={Date.now}>
-                            <Card key={index} note={note}/>
-                        </View>
-                    ))
-                    :
-                    notes.slice(0,3).map((note,index)=>(
-                        <View key={Date.now()+1}>
-                            <Card key={index} note={note}/>
-                        </View>
-                    )) 
-
-                }
+            >
+            {
+                notes.length < 3 || allNotesAreVisible === true
+                ?
+                notes.reverse().map((note,index)=>(
+                    <View key={note.id}>
+                        <Card key={index} note={note}/>
+                    </View>
+                ))
+                :
+                notes.reverse().slice(0,3).map((note,index)=>(
+                    <View key={note.id}>
+                        <Card key={index} note={note}/>
+                    </View>
+                )) 
+            }
                 <AddNoteCard 
                     allNotesAreVisible={allNotesAreVisible} 
                     setAllNotesVisibility={setAllNotesVisibility}
-                    />
+                />
+                {console.log(notes)}
+                {console.log(notes.reverse())}
             </ScrollView>
                 </View>
         </View>

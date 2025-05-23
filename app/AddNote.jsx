@@ -1,5 +1,6 @@
 import TopModal from '@/components/TopModal'
 import { NoteContext } from '@/contexts/NoteContext'
+import { router } from 'expo-router'
 import { useContext, useEffect, useState } from 'react'
 import { TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -33,6 +34,7 @@ const AddNote = () => {
     updateNotes([...notes,note])
     alert('la note a été ajouté')
     setNoteContent('')
+    router.push('/home')
   }
   useEffect(()=>{
     if(noteType === 'normal'){
