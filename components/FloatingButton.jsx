@@ -23,8 +23,8 @@ export default function FloatingButton({ imgSrc, onPress }) {
         <Pressable onPress={onPress}>
             <View style={style.pressable}>
                 <Image
-                    source={imgSrc}
-                    style={{ width: 25, height: 25 }}
+                source={imgSrc}
+                style={{ width: 25, height: 25 }}
                 />
            </View>
         </Pressable>
