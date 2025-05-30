@@ -16,7 +16,8 @@ export default function Header(){
             flexDirection:'row',
             justifyContent:'center',
             alignItems:'center',
-            marginBottom:10
+            marginBottom:10,
+            zIndex:1
         }
       })
       

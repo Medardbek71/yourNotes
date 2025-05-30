@@ -237,7 +237,6 @@ export default function Recipe() {
           disabled={ screenType === 'checklist' ? true : false }
           />
         }
-       { console.log(someItemsAreChecked)}
         {
           screenType === 'noteList' ? 
           <View style={style.dynamicSection}>              

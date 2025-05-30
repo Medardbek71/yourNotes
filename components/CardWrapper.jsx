@@ -1,7 +1,6 @@
 import { NoteContext } from '@/contexts/NoteContext'
 import { useContext, useState } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
-
 import AddNoteCard from './AddNoteCard'
 import Card from './Card'
 
@@ -16,11 +15,11 @@ export default function CardWrapper(){
             flexDirection:'row',
             justifyContent:'center',
             alignItems:'center',
-            borderRadius:12
+            borderRadius:12,
+            zIndex:5
         }
     })
     const {notes,updateNotes} = useContext(NoteContext) 
-    console.log(notes , updateNotes)
     return( 
         <View style={{display:'flex',flexDirection:'row',justifyContent:'center'}}>
         <View style={style.container}>
@@ -47,8 +46,6 @@ export default function CardWrapper(){
                     allNotesAreVisible={allNotesAreVisible} 
                     setAllNotesVisibility={setAllNotesVisibility}
                 />
-                {console.log(notes)}
-                {console.log(notes.reverse())}
             </ScrollView>
                 </View>
         </View>
