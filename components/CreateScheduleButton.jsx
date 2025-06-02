@@ -3,7 +3,11 @@ import { Image } from 'expo-image'
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 
-const CreateScheduleButton = ({isOpen , setState , onPress}) => {
+const CreateScheduleButton = ({isOpen , setState , onPress , setBottomSheetVisibility , bottomSheetVisibility}) => {
+
+const handlePress = ()=>{
+    setBottomSheetVisibility(!bottomSheetVisibility)
+}
 const styles = StyleSheet.create({
     container:{
         position:'absolute',
@@ -33,7 +37,6 @@ const styles = StyleSheet.create({
         marginTop:16
     },
     icon:{
-        backgroundColor:Colors.background.light,
         width:25,
         height:25
     },
@@ -110,7 +113,7 @@ const styles = StyleSheet.create({
                     />
                 </View>
             </View>
-            <View style ={styles.bubble}>
+            <Pressable style ={styles.bubble} onPress={()=>handlePress()}>
                 <View style={styles.bubbleText}>
                     <Text>Costum</Text>
                 </View>
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
                     style={styles.bubbleIcon}
                     />
                 </View>
-            </View>
+            </Pressable>
         </View>
         <Pressable style={{display:'flex',flexDirection:'row',justifyContent:'flex-end'}} onPress={onPress}>
             <View style ={styles.contentContainer}>

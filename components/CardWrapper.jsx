@@ -19,7 +19,7 @@ export default function CardWrapper(){
             zIndex:5
         }
     })
-    const {notes,updateNotes} = useContext(NoteContext) 
+    const {notes} = useContext(NoteContext) 
     return( 
         <View style={{display:'flex',flexDirection:'row',justifyContent:'center'}}>
         <View style={style.container}>
