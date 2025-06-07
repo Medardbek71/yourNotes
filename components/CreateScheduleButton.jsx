@@ -3,17 +3,14 @@ import { Image } from 'expo-image'
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 
-const CreateScheduleButton = ({isOpen , setState , onPress , setBottomSheetVisibility , bottomSheetVisibility}) => {
+const CreateScheduleButton = ({ isOpen , onPress  , setBottomSheetType , openBottomSheet}) => {
 
-const handlePress = ()=>{
-    setBottomSheetVisibility(!bottomSheetVisibility)
-}
 const styles = StyleSheet.create({
     container:{
         position:'absolute',
         bottom:70,
         right:55,
-        zIndex:12
+        zIndex:2
     },
     contentContainer:{
         backgroundColor: isOpen === true ? Colors.background.primary : Colors.background.tertiary,
@@ -58,18 +55,18 @@ const styles = StyleSheet.create({
   return (
     <View style={styles.container}>
         <View style={{display: isOpen === true ? 'flex' : 'none' }}>
-            <View style={styles.bubble}>
+            <Pressable style={styles.bubble} onPress={()=>(setBottomSheetType('meeting'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Meeting</Text>
                 </View>
-                <View style={styles.bubbleImage}>
+            <View style={styles.bubbleImage}>
                     <Image 
                     source={require('../assets/images/meeting.png')}
                     style={styles.bubbleIcon}
                     />
                 </View>
-            </View>
-            <View style ={styles.bubble}>
+            </Pressable>
+            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('appointment'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Appointment</Text>
                 </View>
@@ -79,8 +76,8 @@ const styles = StyleSheet.create({
                     style={styles.bubbleIcon}
                     />
                 </View>
-            </View>
-            <View style ={styles.bubble}>
+            </Pressable>
+            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('event'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Event</Text>
                 </View>
@@ -90,8 +87,8 @@ const styles = StyleSheet.create({
                     style={styles.bubbleIcon}
                     />
                 </View>
-            </View>
-            <View style ={styles.bubble}>
+            </Pressable>
+            <Pressable style={styles.bubble} onPress={()=>(setBottomSheetType('tracker'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Tracker</Text>
                 </View>
@@ -101,8 +98,8 @@ const styles = StyleSheet.create({
                     style={styles.bubbleIcon}
                     />
                 </View>
-            </View>
-            <View style ={styles.bubble}>
+            </Pressable>
+            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('deadline'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Deadline</Text>
                 </View>
@@ -112,8 +109,8 @@ const styles = StyleSheet.create({
                     style={styles.bubbleIcon}
                     />
                 </View>
-            </View>
-            <Pressable style ={styles.bubble} onPress={()=>handlePress()}>
+            </Pressable>
+        <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('costum'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Costum</Text>
                 </View>
@@ -125,15 +122,15 @@ const styles = StyleSheet.create({
                 </View>
             </Pressable>
         </View>
-        <Pressable style={{display:'flex',flexDirection:'row',justifyContent:'flex-end'}} onPress={onPress}>
+        <Pressable style={{display:'flex',flexDirection:'row',justifyContent:'flex-end'}} onPress={onPress} >
             <View style ={styles.contentContainer}>
                 <Image 
-                source={ isOpen === true ? require('../assets/images/cross.png') : require('../assets/images/pencil.png')}
+                source={ isOpen === true ?  require('../assets/images/cross.png') : require('../assets/images/pencil.png')}
                 style={styles.icon}
                 />
             </View>
         </Pressable>
-        </View>
+    </View>
   )
 }
 

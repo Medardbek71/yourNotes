@@ -2,15 +2,11 @@ import Colors from '@/constants/Colors';
 import { NoteContext } from '@/contexts/NoteContext';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useFonts } from "expo-font";
 import { router } from 'expo-router';
 import { useContext } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function AddNoteCard ({allNotesAreVisible , setAllNotesVisibility}){
-const [fontsLoaded] = useFonts({
-    "Inter-Regular": require('../assets/fonts/Inter_28pt-Regular.ttf')
-    })
     const style = StyleSheet.create({
         container:{
             width:171,
@@ -22,6 +18,7 @@ const [fontsLoaded] = useFonts({
             borderRadius:6,
             fontFamily:'Inter-Regular',
             backgroundColor:Colors.background.primary,
+            zIndex:-1
         },
         semiContainer:{
             display:'flex',

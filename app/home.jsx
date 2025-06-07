@@ -1,45 +1,83 @@
-import BottomModal from "@/components/BottomModal";
 import CardWrapper from "@/components/CardWrapper";
 import CreateScheduleButton from "@/components/CreateScheduleButton";
 import Header from "@/components/Header";
 import ImageForEmptySpace from "@/components/ImageForEmptySpace";
 import Colors from "@/constants/Colors";
-import { useFonts } from "expo-font";
-import { useState } from "react";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
-import 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 export default function Index() {
-  const [ isOpen , setState ] = useState(false)
-  const [ bottomSheetVisibility , setBottomSheetVisibility ] = useState(false)
-    const [fontsLoaded] = useFonts({
-      "Inter-Regular": require('../assets/fonts/Inter_28pt-Regular.ttf')
-    })
-    const handlePress = ()=>{
-      setState(!isOpen)
-    }
+  
+  const [floatingActionButtonIsOpen, setFloatingActionButtonState] = useState(false)
+  const [bottomSheetLevel, setBottomSheetLevel] = useState(-1)
+  const [bottomSheetType, setBottomSheetType] = useState('null')
+  const [floatingButtonVisibility , setFloatingButtonVisibility] = useState(true)
+  const bottomSheetRef = useRef(null)
+  console.log(floatingActionButtonIsOpen)
+  
+  const snapPoints = ['90%']
 
-    return (
-      <SafeAreaView style={{backgroundColor:Colors.background.light , flex:1}}>
+  const openBottomSheet = () => {
+    setBottomSheetLevel(1)
+    setFloatingActionButtonState(false)
+    setFloatingButtonVisibility(false)
+  }
+
+  const closeBottomSheet = () => {
+    setBottomSheetLevel(-1)
+    setFloatingButtonVisibility(true)
+  }
+
+  return (
+    <GestureHandlerRootView style={{flex:1}}>
+      <SafeAreaView style={{backgroundColor: Colors.background.light, flex:1}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Header/>
           <CardWrapper/>
-          <Text style={{fontFamily:'Inter-Regular',marginVertical:10,fontSize:18,marginLeft:10}}>Agenda du jour</Text>  
+          <Text style={{fontFamily:'Inter-Regular',marginVertical:10,fontSize:18,marginLeft:10}}>
+            Agenda du jour
+          </Text>  
           <ImageForEmptySpace/>
         </ScrollView>
-          {bottomSheetVisibility === true && <BottomModal/>}  
-          {isOpen === true && <View style={{ zIndex: 1,position: 'absolute',top: 0,left: 0,right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}> </View>}
-          { bottomSheetVisibility === false &&
-            <CreateScheduleButton 
-              isOpen={isOpen}
-              setState={setState}
-              onPress={()=>handlePress()}
-              setBottomSheetVisibility={setBottomSheetVisibility} 
-              bottomSheetVisibility={bottomSheetVisibility}
-            />
-          }
+
+        {(floatingActionButtonIsOpen === true || bottomSheetLevel === 1) && 
+          <View style={{ 
+            zIndex: 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0, 
+            bottom: 0, 
+            backgroundColor:'black',
+            opacity: 0.5
+          }}/>
+        }
+
+        {floatingButtonVisibility === true &&
+          <CreateScheduleButton
+          isOpen={floatingActionButtonIsOpen}
+          onPress={()=>(setFloatingActionButtonState(!floatingActionButtonIsOpen))}
+          setBottomSheetType={setBottomSheetType}
+          openBottomSheet={openBottomSheet}
+        />}
+
+        <BottomSheet
+          ref={bottomSheetRef} 
+          snapPoints={snapPoints}
+          index={bottomSheetLevel}
+          enablePanDownToClose={true}
+          onClose={() => closeBottomSheet()}
+          backgroundStyle={{backgroundColor:'white'}}
+          style={{zIndex: 2}}
+        >
+          <BottomSheetView style={{display:'flex',justifyContent:'center',flexDirection:'row'}}>
+            <Text>{bottomSheetType}</Text>
+          </BottomSheetView>
+        </BottomSheet>
       </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
