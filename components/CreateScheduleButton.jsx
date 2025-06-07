@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   return (
     <View style={styles.container}>
         <View style={{display: isOpen === true ? 'flex' : 'none' }}>
-            <Pressable style={styles.bubble} onPress={()=>(setBottomSheetType('meeting'),openBottomSheet())}>
+            <Pressable style={styles.bubble} onPress={()=>(setBottomSheetType('Meeting'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Meeting</Text>
                 </View>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
                     />
                 </View>
             </Pressable>
-            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('appointment'),openBottomSheet())}>
+            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('Appointment'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Appointment</Text>
                 </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
                     />
                 </View>
             </Pressable>
-            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('event'),openBottomSheet())}>
+            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('Event'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Event</Text>
                 </View>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
                     />
                 </View>
             </Pressable>
-            <Pressable style={styles.bubble} onPress={()=>(setBottomSheetType('tracker'),openBottomSheet())}>
+            <Pressable style={styles.bubble} onPress={()=>(setBottomSheetType('Tracker'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Tracker</Text>
                 </View>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
                     />
                 </View>
             </Pressable>
-            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('deadline'),openBottomSheet())}>
+            <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('Deadline'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Deadline</Text>
                 </View>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
                     />
                 </View>
             </Pressable>
-        <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('costum'),openBottomSheet())}>
+        <Pressable style ={styles.bubble} onPress={()=>(setBottomSheetType('Costum'),openBottomSheet())}>
                 <View style={styles.bubbleText}>
                     <Text>Costum</Text>
                 </View>

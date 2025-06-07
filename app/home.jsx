@@ -2,10 +2,12 @@ import CardWrapper from "@/components/CardWrapper";
 import CreateScheduleButton from "@/components/CreateScheduleButton";
 import Header from "@/components/Header";
 import ImageForEmptySpace from "@/components/ImageForEmptySpace";
+import MeetingSchedule from "@/components/MeetingSchedule";
+import ScheduleHeader from "@/components/ScheduleHeader";
 import Colors from "@/constants/Colors";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useRef, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -44,7 +46,7 @@ export default function Index() {
         </ScrollView>
 
         {(floatingActionButtonIsOpen === true || bottomSheetLevel === 1) && 
-          <View style={{ 
+          <Pressable onPress={()=>setFloatingActionButtonState(false)} style={{ 
             zIndex: 0,
             position: 'absolute',
             top: 0,
@@ -73,8 +75,11 @@ export default function Index() {
           backgroundStyle={{backgroundColor:'white'}}
           style={{zIndex: 2}}
         >
-          <BottomSheetView style={{display:'flex',justifyContent:'center',flexDirection:'row'}}>
-            <Text>{bottomSheetType}</Text>
+          <BottomSheetView style={{display:'flex',justifyContent:'center',flexDirection:'column'}}>
+            <ScheduleHeader bottomSheetType={bottomSheetType}closeBottomSheet={closeBottomSheet}/>
+            {
+              bottomSheetType === 'Meeting' && <MeetingSchedule/>
+            }
           </BottomSheetView>
         </BottomSheet>
       </SafeAreaView>
