@@ -1,17 +1,38 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import DateTimePicker, { useDefaultStyles } from 'react-native-ui-datepicker';
+import { Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+
 
 const MeetingSchedule = () => {
     const [ meetingTitle , setMeetingTitle ] = useState('')
-    const [ meetingDate , setMeetingDate ] = useState('')
-    const defaultStyles = useDefaultStyles();
-    const [selected, setSelected] = useState();
+    const [ meetingDate , setMeetingDate ] = useState(new Date())
+    const [ showPicker , setShowPicker ] = useState(false)
 
-  return (
+    const onDatePickerChange = (event,selectedDate)=>{
+        if(event.type === 'set'){
+            const currentDate = selectedDate || meetingDate
+            if(Platform.OS === 'android'){
+                setMeetingDate(currentDate)
+                setShowPicker(false)
+            }
+        }
+        else if (event.type === 'dismissed'){
+            setShowPicker(false)
+        }
+    }
+
+    const formatDate = (date)=>{
+        return date.toLocaleDateString('fr-Fr',{
+            year:'numeric',
+            month:'numeric',
+            day:'numeric'
+        })
+    }
+    
+    return (
     <View style={styles.container}>
         <View style={styles.textInput}>
-            <Text>Meeting Time</Text>
+            <Text>Meeting Title</Text>
             <TextInput
                 value={meetingTitle}
                 onChangeText={setMeetingTitle}
@@ -20,19 +41,25 @@ const MeetingSchedule = () => {
         </View>
         <View style={styles.textInput}>
             <Text>Date</Text>
-            <TextInput
-                value={meetingDate}
-                onChangeText={setMeetingDate}
-                placeholder='Select date'
-                keyboardType='date'
-            />
-            <DateTimePicker
-            mode="single"
-            date={selected}
-            onChange={({ date }) =>  setSelected(date)}
-            styles={defaultStyles}
-            />
-</View>
+            <Pressable
+                onPress={()=>setShowPicker(true)}
+            >
+                <TextInput
+                    value={formatDate(meetingDate)}
+                    onChangeText={setMeetingDate}
+                    editable={false} 
+                />
+            </Pressable>
+
+        { showPicker === true &&(<DateTimePicker
+            mode='date'
+            display={Platform.OS === 'android' ? 'default' : 'spinner'}
+            value={meetingDate}
+            onChange={onDatePickerChange}
+            minimumDate={new Date('2025-1-1')}
+            maximumDate={new Date('2025-06-13')}
+        />)}
+        </View>
     </View>
   )
 }

@@ -54,7 +54,7 @@ export default function Index() {
             right: 0, 
             bottom: 0, 
             backgroundColor:'black',
-            opacity: 0.5
+            opacity: 0.6
           }}/>
         }
 
