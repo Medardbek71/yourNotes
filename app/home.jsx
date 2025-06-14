@@ -5,7 +5,7 @@ import ImageForEmptySpace from "@/components/ImageForEmptySpace";
 import MeetingSchedule from "@/components/MeetingSchedule";
 import ScheduleHeader from "@/components/ScheduleHeader";
 import Colors from "@/constants/Colors";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useRef, useState } from "react";
 import { Pressable, ScrollView, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -18,7 +18,6 @@ export default function Index() {
   const [bottomSheetType, setBottomSheetType] = useState('null')
   const [floatingButtonVisibility , setFloatingButtonVisibility] = useState(true)
   const bottomSheetRef = useRef(null)
-  console.log(floatingActionButtonIsOpen)
   
   const snapPoints = ['90%']
 
@@ -75,12 +74,12 @@ export default function Index() {
           backgroundStyle={{backgroundColor:'white'}}
           style={{zIndex: 2}}
         >
-          <BottomSheetView style={{display:'flex',justifyContent:'center',flexDirection:'column'}}>
+          <BottomSheetScrollView contentContainerStyle={{justifyContent:'center'}}>
             <ScheduleHeader bottomSheetType={bottomSheetType}closeBottomSheet={closeBottomSheet}/>
             {
               bottomSheetType === 'Meeting' && <MeetingSchedule/>
             }
-          </BottomSheetView>
+          </BottomSheetScrollView>
         </BottomSheet>
       </SafeAreaView>
     </GestureHandlerRootView>
