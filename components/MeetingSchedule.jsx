@@ -3,12 +3,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Checkbox from 'expo-checkbox';
 import * as Contacts from 'expo-contacts';
 import React, { useEffect, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const MeetingSchedule = () => {
     const [meetingTitle, setMeetingTitle] = useState('')
     const [meetingDate, setMeetingDate] = useState(new Date())
     const [meetingTime, setMeetingTime] = useState(new Date())
+    const [meetingDescription , setMeetingDescription] = useState('')
+    const [meetingType , setMeetingType] = useState('')
+    const [meetingLink , setMeetingLink] = useState('')
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTimePicker, setShowTimePicker] = useState(false)
     const [error, setError] = useState(undefined)
@@ -16,7 +19,6 @@ const MeetingSchedule = () => {
     const [collaboratorList, setCollaboratorList] = useState([])
     const [contactsAreSelected, setContactsSelected] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState({})
-    const [parentScrollEnabled, setParentScrollEnabled] = useState(true)
 
     useEffect(() => {
         (async () => {
@@ -46,6 +48,11 @@ const MeetingSchedule = () => {
             }
         })()
     }, [])
+
+    const handlePress = (meetingType)=>{
+        setMeetingType(meetingType)
+        console.log(meetingType)
+    }
 
     const toggleContactSelection = (contactId, contactName) => {
         // Déterminer la nouvelle valeur AVANT de mettre à jour l'état
@@ -98,7 +105,7 @@ const MeetingSchedule = () => {
             setShowTimePicker(false)
         }
     }
-console.log(parentScrollEnabled)
+    
     const formatDate = (date) => {
         return date.toLocaleDateString('fr-FR', {
             year: 'numeric',
@@ -127,11 +134,9 @@ console.log(parentScrollEnabled)
     }
 
     return (
-        <ScrollView 
+        <KeyboardAvoidingView
             style={styles.container}
-            scrollEnabled={false}
-            keyboardShouldPersistTaps="handled"
-            onScroll={()=>console.log('Mouf')}
+            behavior={Platform.OS === 'android' ? 'padding' : 'height'}
         >
             <View style={styles.textInput}>
                 <Text style={styles.label}>Meeting Title</Text>
@@ -215,30 +220,14 @@ console.log(parentScrollEnabled)
                 {error && <Text style={styles.errorText}>{error}</Text>}
                 
                 {contactsAreSelected && contacts && contacts.length > 0 && (
-                    <View style={styles.collaboratorList} scrollTo={true}>
-                        <ScrollView 
-                            scrollEnabled={true}
+                    <View style={styles.collaboratorList}>
+                        <ScrollView
+                            style={styles.contactScrollView}
+                            contentContainerStyle={styles.contactScrollContent}
                             showsVerticalScrollIndicator={true}
-                            keyboardShouldPersistTaps="handled"
-                            contentContainerStyle={styles.scrollViewContent}
-                            bounces={false}
-                            overScrollMode="never"
-                            directionalLockEnabled={true}
-                            onScrollBeginDrag={() => {
-                                // Désactiver le scroll du parent quand on commence à scroller la liste
-                                setParentScrollEnabled(false);
-                                alert('Mouf')
-                            }}
-                            onScrollEndDrag={() => {
-                                // Réactiver le scroll du parent quand on arrête de scroller la liste
-                                setParentScrollEnabled(true);
-                                console.log('Muf')
-                            }}
-                            onMomentumScrollEnd={() => {
-                                // Réactiver le scroll du parent après l'inertie
-                                setParentScrollEnabled(true);
-                                console.log('Le taxi')
-                            }}
+                            nestedScrollEnabled={true}
+                            onScroll={() => console.log('Scroll dans la liste des contacts')}
+                            scrollEventThrottle={16}
                         >
                             {contacts.map((contact, index) => (
                                 <TouchableOpacity
@@ -262,70 +251,58 @@ console.log(parentScrollEnabled)
                     </View>
                 )}
             </View>
-                        <View style={styles.textInput}>
-                <Text style={styles.label}>Date</Text>
-                <Pressable onPress={() => setShowDatePicker(true)}>
-                    <TextInput
-                        style={styles.input}
-                        value={formatDate(meetingDate)}
-                        editable={false}
-                    />
-                </Pressable>
 
-                {showDatePicker && (
-                    <DateTimePicker
-                        mode='date'
-                        display={Platform.OS === 'android' ? 'default' : 'spinner'}
-                        value={meetingDate}
-                        onChange={onDatePickerChange}
-                        minimumDate={new Date()}
-                        maximumDate={new Date('2025-12-31')}
-                    />
-                )}
+            <View style={styles.textInput}>
+                <Text style={styles.label}>Description</Text>
+                <TextInput
+                    style={[styles.input, styles.textArea]}
+                    value={meetingDescription}
+                    onChangeText={setMeetingDescription}
+                    placeholder="write something"
+                    multiline={true}
+                    numberOfLines={3}
+                />
             </View>
-                        <View style={styles.textInput}>
-                <Text style={styles.label}>Date</Text>
-                <Pressable onPress={() => setShowDatePicker(true)}>
-                    <TextInput
-                        style={styles.input}
-                        value={formatDate(meetingDate)}
-                        editable={false}
-                    />
-                </Pressable>
+            <View style={styles.textInput}>
+                <Text style={styles.label}>Meeting type</Text>
+                <View style={{display:'flex',flexDirection:'row', justifyContent:'space-around',width:'50%'}}>
+                    <TouchableOpacity
+                        activeOpacity={0.5} 
+                        onPress={()=>handlePress('online')}
+                        style={[styles.meetingTypeStyle,{backgroundColor:meetingType ==='online' ? Colors.background.secondary: 'white'}]}
+                        >
+                        <Text style={{color: meetingType === 'online'?'white':'black'}}>Online</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={0.5}
+                        onPress={()=>handlePress('office')}
+                        style={[styles.meetingTypeStyle,{backgroundColor:meetingType ==='office' ? Colors.background.secondary: 'white'}]}
+                        >
+                        <Text style={{color: meetingType === 'office'?'white':'black'}}>Office</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View>
+                <Text style={styles.label}>Attach note</Text>
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    style={{backgroundColor:Colors.background.secondary, height:150,width:'100%',borderRadius:10}}
+                >
+                </ScrollView>
+            </View>
+            <View>
+                <Text style={styles.label}>Link</Text>
+                <TextInput
+                    style={styles.input}
+                    value={meetingLink}
+                    onChangeText={setMeetingLink}
+                    placeholder='Paste de meeting Link'
+                />
+            </View>
+            
 
-                {showDatePicker && (
-                    <DateTimePicker
-                        mode='date'
-                        display={Platform.OS === 'android' ? 'default' : 'spinner'}
-                        value={meetingDate}
-                        onChange={onDatePickerChange}
-                        minimumDate={new Date()}
-                        maximumDate={new Date('2025-12-31')}
-                    />
-                )}
-            </View>
-                        <View style={styles.textInput}>
-                <Text style={styles.label}>Date</Text>
-                <Pressable onPress={() => setShowDatePicker(true)}>
-                    <TextInput
-                        style={styles.input}
-                        value={formatDate(meetingDate)}
-                        editable={false}
-                    />
-                </Pressable>
-
-                {showDatePicker && (
-                    <DateTimePicker
-                        mode='date'
-                        display={Platform.OS === 'android' ? 'default' : 'spinner'}
-                        value={meetingDate}
-                        onChange={onDatePickerChange}
-                        minimumDate={new Date()}
-                        maximumDate={new Date('2025-12-31')}
-                    />
-                )}
-            </View>
-        </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -354,6 +331,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         backgroundColor: '#fff'
     },
+    textArea: {
+        height: 80,
+        textAlignVertical: 'top'
+    },
     collaboratorSection: {
         marginBottom: 20
     },
@@ -371,14 +352,17 @@ const styles = StyleSheet.create({
     collaboratorList: {
         marginTop: 15,
         backgroundColor: '#f9f9f9',
-        height: 300,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: '#e0e0e0',
+        height: 200, // Hauteur fixe pour le container
     },
-    scrollViewContent: {
-        paddingBottom: 20,
-        backgroundColor:'red'
+    contactScrollView: {
+        flex: 1,
+    },
+    contactScrollContent: {
+        flexGrow: 1,
+        padding: 8,
     },
     avatar: {
         width: 48,
@@ -442,5 +426,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
         textAlign: 'center'
-    }
+    },
+    meetingTypeStyle:{
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: Colors?.background?.secondary || '#007AFF',
+    },
 })

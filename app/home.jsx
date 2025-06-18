@@ -74,12 +74,25 @@ export default function Index() {
           backgroundStyle={{backgroundColor:'white'}}
           style={{zIndex: 2}}
         >
-          <BottomSheetScrollView contentContainerStyle={{justifyContent:'center'}}>
-            <ScheduleHeader bottomSheetType={bottomSheetType}closeBottomSheet={closeBottomSheet}/>
-            {
-              bottomSheetType === 'Meeting' && <MeetingSchedule/>
-            }
-          </BottomSheetScrollView>
+          <BottomSheetScrollView 
+  contentContainerStyle={{
+    flexGrow: 1,
+    paddingBottom: 50 // Plus d'espace en bas
+  }}
+  nestedScrollEnabled={true}
+  scrollEnabled={true}
+  showsVerticalScrollIndicator={true}
+  keyboardShouldPersistTaps="handled"
+  keyboardDismissMode='on-drag'
+  automaticallyAdjustKeyboardInsets={true}
+
+>
+  <ScheduleHeader 
+    bottomSheetType={bottomSheetType}
+    closeBottomSheet={closeBottomSheet}
+  />
+  {bottomSheetType === 'Meeting' && <MeetingSchedule/>}
+</BottomSheetScrollView>
         </BottomSheet>
       </SafeAreaView>
     </GestureHandlerRootView>

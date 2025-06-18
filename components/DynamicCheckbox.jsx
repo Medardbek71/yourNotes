@@ -36,7 +36,7 @@ export default function DynamicCheckbox({items, setItems}) {
   return (
     <ScrollView style={{width:'100%'}}>
        <KeyboardAvoidingView
-      behavior={Platform.OS === 'android' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'android' ? 'padding' : 'height'}
       style={styles.container}
     >
       {
@@ -63,7 +63,6 @@ export default function DynamicCheckbox({items, setItems}) {
             >
               <Text style={styles.addButtonText}>+</Text>
             </Pressable>
-          
           </View>
         ))
       }

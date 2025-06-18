@@ -19,11 +19,11 @@ export default function RootLayout() {
         <Stack
           screenOptions={{headerShown:false}}
         >
-            <Stack.Screen name='home' options={{headerShown:false}}/>
-            <Stack.Screen name='Note' options={{headerShown:false}}/>
-            <Stack.Screen name='AddNote' options={{headerShown:false}}/>
-              <Stack.Screen name='Recipe' options={{headerShown:false}}/>
-              <Stack.Screen name='ShoppingList' options={{headerShown:false}}/>
+          <Stack.Screen name='home' options={{headerShown:false}}/>
+          <Stack.Screen name='Note' options={{headerShown:false}}/>
+          <Stack.Screen name='AddNote' options={{headerShown:false}}/>
+          <Stack.Screen name='Recipe' options={{headerShown:false}}/>
+          <Stack.Screen name='ShoppingList' options={{headerShown:false}}/>
         </Stack>
       </NoteContext.Provider>
       </TitleContext.Provider>
