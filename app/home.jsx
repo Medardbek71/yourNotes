@@ -1,5 +1,7 @@
+import AppointmentSchedule from '@/components/Appointment';
 import CardWrapper from "@/components/CardWrapper";
 import CreateScheduleButton from "@/components/CreateScheduleButton";
+import DeadLineSchedule from '@/components/DeadLineSchedule';
 import Header from "@/components/Header";
 import ImageForEmptySpace from "@/components/ImageForEmptySpace";
 import MeetingSchedule from "@/components/MeetingSchedule";
@@ -74,24 +76,29 @@ export default function Index() {
           backgroundStyle={{backgroundColor:'white'}}
           style={{zIndex: 2}}
         >
-          <BottomSheetScrollView 
-  contentContainerStyle={{
-    flexGrow: 1,
-    paddingBottom: 50 // Plus d'espace en bas
-  }}
-  nestedScrollEnabled={true}
-  scrollEnabled={true}
-  showsVerticalScrollIndicator={true}
-  keyboardShouldPersistTaps="handled"
-  keyboardDismissMode='on-drag'
-  automaticallyAdjustKeyboardInsets={true}
-
->
+  <BottomSheetScrollView 
+    contentContainerStyle={{
+      flexGrow: 1,
+      paddingBottom: 50 ,
+      display:'flex',
+      flexDirection:'column',
+      alignItems:'center',
+      justifyContent:'center'
+    }}
+    nestedScrollEnabled={true}
+    scrollEnabled={true}
+    showsVerticalScrollIndicator={true}
+    keyboardShouldPersistTaps="handled"
+    keyboardDismissMode='on-drag'
+    automaticallyAdjustKeyboardInsets={true}
+  >
   <ScheduleHeader 
     bottomSheetType={bottomSheetType}
     closeBottomSheet={closeBottomSheet}
   />
   {bottomSheetType === 'Meeting' && <MeetingSchedule/>}
+  {bottomSheetType === 'Appointment' && <AppointmentSchedule/>}
+  {bottomSheetType === 'Deadline' && <DeadLineSchedule/> }
 </BottomSheetScrollView>
         </BottomSheet>
       </SafeAreaView>

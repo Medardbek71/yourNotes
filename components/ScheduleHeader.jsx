@@ -25,7 +25,7 @@ const ScheduleHeader = ({bottomSheetType}) => {
         break;
     }
   return (
-    <View style={{width:'95%'}}>
+    <View style={{width:'95%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
         <View style={styles.container}>
             <Pressable onPress={()=>alert('Canceled')}>
                 <Text> Cancel</Text>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         width:'95%',
-        margin:16
+        margin:16,
     },
     centerImage:{
         display:'flex',
@@ -63,9 +63,13 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     separator:{
+        display:'flex',
+        flexDirection:'row',
+        alignItems:'center',
+        justifyContent:'center',
         marginTop:8,
         backgroundColor:'grey',
         width:'100%',
-        height:1
+        height:2
     }
 })

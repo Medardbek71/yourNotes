@@ -1,10 +1,25 @@
 import { router } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import { TextInput, View } from 'react-native';
 import PressableIcons from "./PressableIcons";
 
 
-const NoteHeader = ({saveNote,isOpen,setIsOpen,noteTitle,setNoteTitle, noteIsEmpty}) => {
-    const backButton = ()=> router.back()
+const NoteHeader = ({saveNote,isOpen,setIsOpen,noteTitle,setNoteTitle, noteIsEmpty , isEditMode ,noteContent , id}) => {
+    const database = useSQLiteContext()
+    const backButton = async()=> {
+        if(isEditMode){
+            try {
+              const response =  await database.runAsync('UPDATE notes SET title = ? , content = ? WHERE id = ?;',[noteTitle , noteContent ,id])
+                console.log('modification reussie')
+                console.log(response)
+            } catch (error) {
+                console.log(error)
+            }
+            router.back()
+        }else{
+            router.back()
+        }
+    }
     const handleSubModal = () => {
         if(isOpen === true){
             setIsOpen(false)
@@ -29,16 +44,24 @@ const NoteHeader = ({saveNote,isOpen,setIsOpen,noteTitle,setNoteTitle, noteIsEmp
             </View>
         <View style={{width:'20%',display:'flex',justifyContent:'space-around',flexDirection:'row'}}>
             <View>
-                <PressableIcons  
-                    imgSrc={require('../assets/images/trailingIcon2.png')} 
-                    onPress={handleSubModal}
-                />
+                {
+                    !isEditMode && (
+                        <PressableIcons  
+                            imgSrc={require('../assets/images/trailingIcon2.png')} 
+                            onPress={handleSubModal}
+                        />
+                    )
+                }
             </View>
             <View >
-                <PressableIcons 
-                    imgSrc={ noteIsEmpty === false ? require('../assets/images/trailingIcon.png') : require('../assets/images/trailingIcon_disable.png')}
-                    onPress={noteIsEmpty === false ? saveNote : null}
-                />
+                {
+                    !isEditMode &&(
+                        <PressableIcons 
+                            imgSrc={ noteIsEmpty === false ? require('../assets/images/trailingIcon.png') : require('../assets/images/trailingIcon_disable.png')}
+                            onPress={noteIsEmpty === false ? saveNote : null}
+                        />
+                    )
+                }
             </View>
             </View>
         </View>
