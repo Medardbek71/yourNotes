@@ -16,7 +16,6 @@ export default function CardWrapper(){
                 setLoading(true)
                 console.log('data is loading')
                 const queryResults = await database.getAllAsync("SELECT * FROM notes ORDER BY id DESC;")
-                console.log(queryResults)
                 setLoading(false)
                 setNotes(queryResults)
             } catch (error) {
@@ -24,9 +23,9 @@ export default function CardWrapper(){
             }
         }
         loadData()
-    },[database,loading])
+    },[database])
 
-
+ 
     return( 
         <View style={{display:'flex',flexDirection:'row',justifyContent:'center'}}>
         <View style={style.container}>

@@ -13,12 +13,15 @@ import { Pressable, ScrollView, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+
 export default function Index() {
   
   const [floatingActionButtonIsOpen, setFloatingActionButtonState] = useState(false)
   const [bottomSheetLevel, setBottomSheetLevel] = useState(-1)
   const [bottomSheetType, setBottomSheetType] = useState('null')
   const [floatingButtonVisibility , setFloatingButtonVisibility] = useState(true)
+
+
   const bottomSheetRef = useRef(null)
   
   const snapPoints = ['90%']
@@ -75,6 +78,8 @@ export default function Index() {
           onClose={() => closeBottomSheet()}
           backgroundStyle={{backgroundColor:'white'}}
           style={{zIndex: 2}}
+          maxDynamicContentSize={90}
+          handleIndicatorStyle={{backgroundColor:Colors.background.disabled,width:120,height:3}}
         >
   <BottomSheetScrollView 
     contentContainerStyle={{

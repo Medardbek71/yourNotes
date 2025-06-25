@@ -2,7 +2,7 @@ import NoteHeader from '@/components/NoteHeader'
 import { useLocalSearchParams } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Note = () => {
@@ -23,15 +23,22 @@ console.log(id)
           setNoteTitle(queryResult.title || '')
           setNoteContent(queryResult.content || '')
           setNoteType(queryResult.type || '')
+          setIsLoading(false)
         }
       } catch (error) {
         console.error(error)
       }
     }
-      if(id){
-        loadData(id)
-      }
-  },[isLoading])
+    loadData(id)
+  },[id])
+
+const handleTextChange = (text , id) => {
+  ''
+}
+
+const handleToggle = () => {
+  return('')
+}
 
 const renderUpdateNormalNote = () => (
   <TextInput 
@@ -44,12 +51,34 @@ const renderUpdateNormalNote = () => (
   />
 )
 
-const renderUpdateChecklistNote = () => (
-  <Text>la romanbele</Text>
-)
+const renderUpdateChecklistNote = () => {
+  const queryResults = database.getAllAsync('SELECT * FROM items WHERE note_id = ?;',[id])
+  console.log(queryResults)
+  // queryResults.map((item)=>{
+  //   return(
+  //     // <View key={item.id}>
+  //     //   <Checkbox
+  //     //     value={item.is_checked}
+  //     //     onValueChange={() => handleToggle(item.id)}
+  //     //     color={item.checked === true ? Colors.background.secondary : undefined}
+  //     //     containerStyle={styles.checkbox}
+  //     //   />
+        
+  //     //   <TextInput
+  //     //     value={item.name}
+  //     //     multiline={true}
+  //     //     onChangeText={(text) => handleTextChange(text, item.id)}
+  //     //     editable={true}
+  //     //   /> 
+  //     // </View>
+  //     ''
+  //   )
+  // })
+}
 
   return (
     <SafeAreaView>
+      { isLoading === true ? <ActivityIndicator/> :
       <View style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
         <NoteHeader
           noteTitle={noteTitle}
@@ -61,6 +90,7 @@ const renderUpdateChecklistNote = () => (
         {noteType === 'normal' && renderUpdateNormalNote()}
         {noteType === 'checklist' && renderUpdateChecklistNote()}
       </View>
+      }
     </SafeAreaView>
   )
 }

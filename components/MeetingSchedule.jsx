@@ -1,9 +1,10 @@
 import Colors from '@/constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Checkbox from 'expo-checkbox';
+import { Checkbox } from 'expo-checkbox';
 import * as Contacts from 'expo-contacts';
 import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import CardForSchedule from './CardForSchedule';
 
 const MeetingSchedule = () => {
     const [meetingTitle, setMeetingTitle] = useState('')
@@ -19,7 +20,8 @@ const MeetingSchedule = () => {
     const [collaboratorList, setCollaboratorList] = useState([])
     const [contactsAreSelected, setContactsSelected] = useState(false)
     const [selectedContacts, setSelectedContacts] = useState({})
-
+    const [isLoading , setIsLoading] = useState(true)
+    
     useEffect(() => {
         (async () => {
             try {
@@ -284,12 +286,8 @@ const MeetingSchedule = () => {
             </View>
             <View>
                 <Text style={styles.label}>Attach note</Text>
-                <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    style={{backgroundColor:Colors.background.secondary, height:150,width:'100%',borderRadius:10}}
-                >
-                </ScrollView>
+                <CardForSchedule/>
+
             </View>
             <View>
                 <Text style={styles.label}>Link</Text>
@@ -312,7 +310,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
     },
     textInput: {
         marginBottom: 20
