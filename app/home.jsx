@@ -1,7 +1,7 @@
-import AppointmentSchedule from '@/components/Appointment';
+import AppointmentSchedule from "@/components/Appointment";
 import CardWrapper from "@/components/CardWrapper";
 import CreateScheduleButton from "@/components/CreateScheduleButton";
-import DeadLineSchedule from '@/components/DeadLineSchedule';
+import DeadLineSchedule from "@/components/DeadLineSchedule";
 import Header from "@/components/Header";
 import ImageForEmptySpace from "@/components/ImageForEmptySpace";
 import MeetingSchedule from "@/components/MeetingSchedule";
@@ -13,7 +13,6 @@ import { Pressable, ScrollView, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 export default function Index() {
   
   const [floatingActionButtonIsOpen, setFloatingActionButtonState] = useState(false)
@@ -21,13 +20,12 @@ export default function Index() {
   const [bottomSheetType, setBottomSheetType] = useState('null')
   const [floatingButtonVisibility , setFloatingButtonVisibility] = useState(true)
 
-
   const bottomSheetRef = useRef(null)
   
   const snapPoints = ['90%']
 
   const openBottomSheet = () => {
-    setBottomSheetLevel(1)
+    setBottomSheetLevel(0)
     setFloatingActionButtonState(false)
     setFloatingButtonVisibility(false)
   }
@@ -40,7 +38,10 @@ export default function Index() {
   return (
     <GestureHandlerRootView style={{flex:1}}>
       <SafeAreaView style={{backgroundColor: Colors.background.light, flex:1}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled={true}
+        >
           <Header/>
           <CardWrapper/>
           <Text style={{fontFamily:'Inter-Regular',marginVertical:10,fontSize:18,marginLeft:10}}>
@@ -49,7 +50,7 @@ export default function Index() {
           <ImageForEmptySpace/>
         </ScrollView>
 
-        {(floatingActionButtonIsOpen === true || bottomSheetLevel === 1) && 
+        {(floatingActionButtonIsOpen || bottomSheetLevel === 0) && 
           <Pressable onPress={()=>setFloatingActionButtonState(false)} style={{ 
             zIndex: 0,
             position: 'absolute',
@@ -62,13 +63,14 @@ export default function Index() {
           }}/>
         }
 
-        {floatingButtonVisibility === true &&
+        {floatingButtonVisibility &&
           <CreateScheduleButton
-          isOpen={floatingActionButtonIsOpen}
-          onPress={()=>(setFloatingActionButtonState(!floatingActionButtonIsOpen))}
-          setBottomSheetType={setBottomSheetType}
-          openBottomSheet={openBottomSheet}
-        />}
+            isOpen={floatingActionButtonIsOpen}
+            onPress={()=>(setFloatingActionButtonState(!floatingActionButtonIsOpen))}
+            setBottomSheetType={setBottomSheetType}
+            openBottomSheet={openBottomSheet}
+          />
+        }
 
         <BottomSheet
           ref={bottomSheetRef} 
@@ -77,34 +79,20 @@ export default function Index() {
           enablePanDownToClose={true}
           onClose={() => closeBottomSheet()}
           backgroundStyle={{backgroundColor:'white'}}
+          enableDynamicSizing={false}
           style={{zIndex: 2}}
-          maxDynamicContentSize={90}
           handleIndicatorStyle={{backgroundColor:Colors.background.disabled,width:120,height:3}}
+          nestedScrollEnabled={true}
         >
-  <BottomSheetScrollView 
-    contentContainerStyle={{
-      flexGrow: 1,
-      paddingBottom: 50 ,
-      display:'flex',
-      flexDirection:'column',
-      alignItems:'center',
-      justifyContent:'center'
-    }}
-    nestedScrollEnabled={true}
-    scrollEnabled={true}
-    showsVerticalScrollIndicator={true}
-    keyboardShouldPersistTaps="handled"
-    keyboardDismissMode='on-drag'
-    automaticallyAdjustKeyboardInsets={true}
-  >
-  <ScheduleHeader 
-    bottomSheetType={bottomSheetType}
-    closeBottomSheet={closeBottomSheet}
-  />
-  {bottomSheetType === 'Meeting' && <MeetingSchedule/>}
-  {bottomSheetType === 'Appointment' && <AppointmentSchedule/>}
-  {bottomSheetType === 'Deadline' && <DeadLineSchedule/> }
-</BottomSheetScrollView>
+          <BottomSheetScrollView
+                bottomSheetType={bottomSheetType}
+                closeBottomSheet={closeBottomSheet}
+          />
+            <ScheduleHeader/>
+            {bottomSheetType === 'Meeting' && <MeetingSchedule/>}
+            {bottomSheetType === 'Appointment' && <AppointmentSchedule/>}
+            {bottomSheetType === 'Deadline' && <DeadLineSchedule/> }
+            <BottomSheetScrollView/>
         </BottomSheet>
       </SafeAreaView>
     </GestureHandlerRootView>

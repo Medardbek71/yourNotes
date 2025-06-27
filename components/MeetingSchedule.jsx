@@ -3,7 +3,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Checkbox } from 'expo-checkbox';
 import * as Contacts from 'expo-contacts';
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import CardForSchedule from './CardForSchedule';
 
 const MeetingSchedule = () => {
@@ -136,6 +137,7 @@ const MeetingSchedule = () => {
     }
 
     return (
+    <ScrollView>
         <KeyboardAvoidingView
             style={styles.container}
             behavior={Platform.OS === 'android' ? 'padding' : 'height'}
@@ -226,14 +228,12 @@ const MeetingSchedule = () => {
                         <ScrollView
                             style={styles.contactScrollView}
                             contentContainerStyle={styles.contactScrollContent}
-                            showsVerticalScrollIndicator={true}
                             nestedScrollEnabled={true}
-                            onScroll={() => console.log('Scroll dans la liste des contacts')}
                             scrollEventThrottle={16}
                         >
                             {contacts.map((contact, index) => (
                                 <TouchableOpacity
-                                    key={contact.id || index}
+                                key={contact.id || index}
                                     style={styles.contactView}
                                     onPress={() => toggleContactSelection(contact.id, getContactDisplayName(contact))}
                                     activeOpacity={0.7}
@@ -301,6 +301,7 @@ const MeetingSchedule = () => {
             
 
         </KeyboardAvoidingView>
+    </ScrollView>
     )
 }
 

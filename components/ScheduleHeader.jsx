@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         marginTop:8,
         backgroundColor:'grey',
-        width:'100%',
-        height:2
+        width:'90%',
+        height:1
     }
 })
