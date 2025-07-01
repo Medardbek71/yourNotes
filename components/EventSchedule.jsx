@@ -9,14 +9,17 @@ import {
   View,
 } from "react-native";
 import CardForSchedule from "./CardForSchedule";
+import CollaboratorList from "./CollaboratorList";
 
-const Appointment = () => {
-  const [name, setName] = useState("");
+const EventSchedule = () => {
+  const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
-  const [description, setDescription] = useState("");
+  const [collaboratorList, setCollaboratorList] = useState([]);
+  const [attachedNotes, setAttachedNotes] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [attachedNotesVisibility, setAttachedNotesVisibility] = useState(false);
 
   const onDatePickerChange = (event, selectedDate) => {
     if (event.type === "set") {
@@ -57,18 +60,23 @@ const Appointment = () => {
     });
   };
 
+  const toggleNoteVisibility = () => {
+    console.log("yoyo");
+    const attachedNotesVisibilityCopy = !attachedNotesVisibility;
+    setAttachedNotesVisibility(attachedNotesVisibilityCopy);
+  };
+
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.label}>Enter meeting title</Text>
+      <View style={styles.textInput}>
+        <Text style={styles.label}>Event title</Text>
         <TextInput
-          value={name}
-          onChangeText={(Text) => setName(Text)}
-          placeholder="Enter meeting name"
+          value={title}
+          onChangeText={(Text) => setTitle(Text)}
           style={styles.input}
         />
       </View>
-      <View>
+      <View style={styles.textInput}>
         <Text style={styles.label}>Date</Text>
         <Pressable onPress={() => setShowDatePicker(true)}>
           <TextInput
@@ -86,7 +94,7 @@ const Appointment = () => {
           />
         )}
       </View>
-      <View>
+      <View style={styles.textInput}>
         <Text style={styles.label}>Time</Text>
         <Pressable onPress={() => setShowTimePicker(true)}>
           <TextInput
@@ -95,33 +103,25 @@ const Appointment = () => {
             style={styles.input}
           />
         </Pressable>
-        {showTimePicker && (
-          <DateTimePicker
-            mode="time"
-            display={Platform.OS === "android" ? "default" : "spinner"}
-            value={time}
-            onChange={onTimePickerChange}
-          />
-        )}
       </View>
-      <View>
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          value={description}
-          onChangeText={(Text) => setDescription(Text)}
-          numberOfLines={5}
-          style={styles.input}
+      {showTimePicker && (
+        <DateTimePicker
+          mode="time"
+          display={Platform.OS === "android" ? "default" : "spinner"}
+          value={date}
+          onChange={onTimePickerChange}
         />
-      </View>
-      <View>
+      )}
+      <CollaboratorList />
+      <Pressable onPress={() => toggleNoteVisibility()}>
         <Text style={styles.label}>Attach note</Text>
-        <CardForSchedule />
-      </View>
+      </Pressable>
+      {attachedNotesVisibility && <CardForSchedule />}
     </View>
   );
 };
 
-export default Appointment;
+export default EventSchedule;
 
 const styles = StyleSheet.create({
   container: {
