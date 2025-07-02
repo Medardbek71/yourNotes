@@ -1,10 +1,14 @@
 import { Checkbox } from "expo-checkbox";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-const TrackingDays = () => {
-  const [attachedNotes, setAttachedNote] = useState([]);
-  const [trackedDay, setTrackedDay] = useState([]);
+const TrackingDays = (setTrackedDay) => {
+  const handleDaySelected = (dayName) => {
+    setTrackedDay((prevState) => ({
+      ...prevState,
+      [dayName]: !prevState[dayName],
+    }));
+  };
 
   return (
     <View
@@ -20,7 +24,10 @@ const TrackingDays = () => {
           flexDirection: "column",
         }}
       >
-        <Checkbox />
+        <Checkbox
+          value={() => handleDaySelected("monday")}
+          onValueChange={handleDaySelected("monday")}
+        />
         <Text>M</Text>
       </View>
       <View
@@ -31,7 +38,10 @@ const TrackingDays = () => {
           backgroundColor: "white",
         }}
       >
-        <Checkbox />
+        <Checkbox
+          value={() => handleDaySelected("tuesday")}
+          onValueChange={handleDaySelected("tuesday")}
+        />
         <Text>T</Text>
       </View>
       <View
@@ -41,7 +51,10 @@ const TrackingDays = () => {
           alignItems: "center",
         }}
       >
-        <Checkbox />
+        <Checkbox
+          value={() => handleDaySelected("wednesday")}
+          onValueChange={handleDaySelected("wednesday")}
+        />
         <Text>W</Text>
       </View>
       <View
@@ -51,7 +64,10 @@ const TrackingDays = () => {
           alignItems: "center",
         }}
       >
-        <Checkbox />
+        <Checkbox
+          value={() => handleDaySelected("thursday")}
+          onValueChange={handleDaySelected("thursday")}
+        />
         <Text>T</Text>
       </View>
       <View
@@ -61,7 +77,10 @@ const TrackingDays = () => {
           alignItems: "center",
         }}
       >
-        <Checkbox />
+        <Checkbox
+          value={() => handleDaySelected("friday")}
+          onValueChange={handleDaySelected("friday")}
+        />
         <Text>F</Text>
       </View>
       <View
@@ -71,7 +90,10 @@ const TrackingDays = () => {
           alignItems: "center",
         }}
       >
-        <Checkbox />
+        <Checkbox
+          value={() => handleDaySelected("saturday")}
+          onValueChange={handleDaySelected("saturday")}
+        />
         <Text>S</Text>
       </View>
       <View
@@ -81,7 +103,10 @@ const TrackingDays = () => {
           alignItems: "center",
         }}
       >
-        <Checkbox />
+        <Checkbox
+          value={() => handleDaySelected("sunday")}
+          onValueChange={handleDaySelected("sunday")}
+        />
         <Text>S</Text>
       </View>
     </View>

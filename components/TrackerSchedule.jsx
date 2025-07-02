@@ -2,6 +2,7 @@ import TrackingDays from "@/components/TrackingDays";
 import Colors from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+import CardForSchedule from "@/components/CardForSchedule";
 import React, { useState } from "react";
 import {
   Platform,
@@ -12,7 +13,6 @@ import {
   View,
 } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
-import CardForSchedule from "./CardForSchedule";
 
 const TrackerSchedule = () => {
   const [title, setTitle] = useState("");
@@ -21,6 +21,15 @@ const TrackerSchedule = () => {
   const [description, setDescription] = useState("");
   const [attachedNotesVisibility, setAttachedNotesVisibility] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [trackedDay, setTrackedDay] = useState({
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
+  });
 
   const toggleNoteVisibility = () => {
     const attachedNotesVisibilityCopy = !attachedNotesVisibility;
@@ -91,7 +100,7 @@ const TrackerSchedule = () => {
           />
         </Pressable>
 
-        {repeat && <TrackingDays />}
+        {repeat && <TrackingDays setTrackedDay={setTrackedDay} />}
 
         <View style={styles.textInput}>
           <Text style={styles.label}>Description</Text>

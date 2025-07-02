@@ -16,7 +16,6 @@ const EventSchedule = () => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [collaboratorList, setCollaboratorList] = useState([]);
-  const [attachedNotes, setAttachedNotes] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [attachedNotesVisibility, setAttachedNotesVisibility] = useState(false);
@@ -112,7 +111,10 @@ const EventSchedule = () => {
           onChange={onTimePickerChange}
         />
       )}
-      <CollaboratorList />
+      <CollaboratorList
+        collaboratorList={collaboratorList}
+        setCollaboratorList={setCollaboratorList}
+      />
       <Pressable onPress={() => toggleNoteVisibility()}>
         <Text style={styles.label}>Attach note</Text>
       </Pressable>
