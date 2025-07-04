@@ -12,8 +12,8 @@ const CreateScheduleButton = ({
   const styles = StyleSheet.create({
     container: {
       position: "absolute",
-      bottom: 70,
-      right: 55,
+      bottom: 90,
+      right: 30,
       zIndex: 2,
     },
     contentContainer: {
@@ -34,19 +34,19 @@ const CreateScheduleButton = ({
       flexDirection: "row",
       justifyContent: "space-between",
       paddingHorizontal: 16,
-      backgroundColor: Colors.background.primary,
+      backgroundColor: Colors.background.light,
       borderRadius: 4,
       height: 46,
       width: "auto",
       marginTop: 16,
     },
     icon: {
-      width: 25,
-      height: 25,
+      width: 30,
+      height: 30,
     },
     bubbleIcon: {
-      width: 23,
-      height: 23,
+      width: 35,
+      height: 35,
     },
     bubbleText: {
       display: "flex",
@@ -74,7 +74,7 @@ const CreateScheduleButton = ({
           </View>
           <View style={styles.bubbleImage}>
             <Image
-              source={require("../assets/images/meeting.png")}
+              source={require("../assets/images/meeting.svg")}
               style={styles.bubbleIcon}
             />
           </View>
@@ -88,7 +88,7 @@ const CreateScheduleButton = ({
           </View>
           <View style={styles.bubbleImage}>
             <Image
-              source={require("../assets/images/appointment.png")}
+              source={require("../assets/images/calendar.svg")}
               style={styles.bubbleIcon}
             />
           </View>
@@ -102,7 +102,7 @@ const CreateScheduleButton = ({
           </View>
           <View style={styles.bubbleImage}>
             <Image
-              source={require("../assets/images/event.png")}
+              source={require("../assets/images/event.svg")}
               style={styles.bubbleIcon}
             />
           </View>
@@ -116,7 +116,7 @@ const CreateScheduleButton = ({
           </View>
           <View style={styles.bubbleImage}>
             <Image
-              source={require("../assets/images/tracker.png")}
+              source={require("../assets/images/tracker.svg")}
               style={styles.bubbleIcon}
             />
           </View>
@@ -130,7 +130,7 @@ const CreateScheduleButton = ({
           </View>
           <View style={styles.bubbleImage}>
             <Image
-              source={require("../assets/images/deadline.png")}
+              source={require("../assets/images/deadline.svg")}
               style={styles.bubbleIcon}
             />
           </View>
@@ -144,7 +144,7 @@ const CreateScheduleButton = ({
           </View>
           <View style={styles.bubbleImage}>
             <Image
-              source={require("../assets/images/fab2.png")}
+              source={require("../assets/images/pencil.svg")}
               style={styles.bubbleIcon}
             />
           </View>
@@ -162,8 +162,8 @@ const CreateScheduleButton = ({
           <Image
             source={
               isOpen === true
-                ? require("../assets/images/cross.png")
-                : require("../assets/images/pencil.png")
+                ? require("../assets/images/cross.svg")
+                : require("../assets/images/pencil-dark.svg")
             }
             style={styles.icon}
           />

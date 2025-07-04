@@ -243,7 +243,7 @@ export default function Card({ note }) {
       case "normal":
         return renderNormalList();
       case "checklist":
-        return renderChecklist();
+      // return renderChecklist();
       case "recipe":
         return renderRecipeList();
       default:

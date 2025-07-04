@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
 
@@ -66,7 +67,7 @@ const EventSchedule = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.textInput}>
         <Text style={styles.label}>Event title</Text>
         <TextInput
@@ -119,7 +120,7 @@ const EventSchedule = () => {
         <Text style={styles.label}>Attach note</Text>
       </Pressable>
       {attachedNotesVisibility && <CardForSchedule />}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+    marginBottom: 7,
   },
   textInput: {
     marginBottom: 20,

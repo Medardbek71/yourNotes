@@ -25,7 +25,10 @@ export default function Index() {
 
   const bottomSheetRef = useRef(null);
 
-  const snapPoints = ["90%"];
+  const snapPoints = ["90%", "65%"];
+
+  const setBottomSheetSnapPoint = () => {};
+  setBottomSheetSnapPoint();
 
   const openBottomSheet = () => {
     setBottomSheetLevel(0);
@@ -42,6 +45,7 @@ export default function Index() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView
         style={{ backgroundColor: Colors.background.light, flex: 1 }}
+        edges={["top", "left", "right"]}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -54,7 +58,7 @@ export default function Index() {
               fontFamily: "Inter-Regular",
               marginVertical: 10,
               fontSize: 18,
-              marginLeft: 10,
+              marginLeft: 20,
             }}
           >
             Agenda du jour
@@ -91,7 +95,9 @@ export default function Index() {
 
         <BottomSheet
           ref={bottomSheetRef}
-          snapPoints={snapPoints}
+          snapPoints={
+            bottomSheetType === "Meeting" ? [snapPoints[0]] : [snapPoints[1]]
+          }
           index={bottomSheetLevel}
           enablePanDownToClose={true}
           onClose={() => closeBottomSheet()}

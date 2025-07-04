@@ -1,8 +1,7 @@
+import CardForSchedule from "@/components/CardForSchedule";
 import TrackingDays from "@/components/TrackingDays";
 import Colors from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
-import CardForSchedule from "@/components/CardForSchedule";
 import React, { useState } from "react";
 import {
   Platform,
@@ -12,6 +11,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import ToggleSwitch from "toggle-switch-react-native";
 
 const TrackerSchedule = () => {
@@ -35,12 +35,14 @@ const TrackerSchedule = () => {
     const attachedNotesVisibilityCopy = !attachedNotesVisibility;
     setAttachedNotesVisibility(attachedNotesVisibilityCopy);
   };
+
   const formatTime = (date) => {
     return date.toLocaleTimeString("fr-FR", {
       hour: "2-digit",
       minute: "2-digit",
     });
   };
+
   const onTimePickerChange = (event, selectedTime) => {
     if (event.type === "set") {
       const currentTime = selectedTime || time;
@@ -52,16 +54,18 @@ const TrackerSchedule = () => {
       setShowTimePicker(false);
     }
   };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.textInput}>
         <Text style={styles.label}>Title</Text>
         <TextInput
           value={title}
-          onChangeText={(Text) => setTitle(Text)}
+          onChangeText={(text) => setTitle(text)}
           style={styles.input}
         />
       </View>
+
       <View style={styles.textInput}>
         <Text style={styles.label}>Time</Text>
         <Pressable onPress={() => setShowTimePicker(true)}>
@@ -79,43 +83,39 @@ const TrackerSchedule = () => {
             onChange={onTimePickerChange}
           />
         )}
-
-        <Pressable
-          onPress={() => setRepeat(!repeat)}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginVertical: 20,
-          }}
-        >
-          <Text style={styles.label}>Repeat</Text>
-          <ToggleSwitch
-            isOn={repeat}
-            offColor={Colors.background.primary}
-            onColor={Colors.background.secondary}
-            size="medium"
-            onToggle={() => setRepeat(!repeat)}
-          />
-        </Pressable>
-
-        {repeat && <TrackingDays setTrackedDay={setTrackedDay} />}
-
-        <View style={styles.textInput}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            value={description}
-            onChangeText={(Text) => setDescription(Text)}
-            style={styles.input}
-          />
-        </View>
-        <Pressable onPress={() => toggleNoteVisibility()}>
-          <Text style={styles.label}>Attach note</Text>
-        </Pressable>
-        {attachedNotesVisibility && <CardForSchedule />}
       </View>
-    </View>
+
+      <Pressable
+        onPress={() => setRepeat(!repeat)}
+        style={styles.repeatContainer}
+      >
+        <Text style={styles.label}>Repeat</Text>
+        <ToggleSwitch
+          isOn={repeat}
+          offColor={Colors.background.primary}
+          onColor={Colors.background.secondary}
+          size="medium"
+          onToggle={() => setRepeat(!repeat)}
+        />
+      </Pressable>
+      <Text style={{ fontFamily: "Inter-Regular" }}>Which days to track ?</Text>
+
+      <TrackingDays setTrackedDay={setTrackedDay} trackedDay={trackedDay} />
+
+      <View style={styles.textInput}>
+        <Text style={styles.label}>Description</Text>
+        <TextInput
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+          style={styles.input}
+        />
+      </View>
+
+      <Pressable onPress={() => toggleNoteVisibility()}>
+        <Text style={styles.label}>Attach note</Text>
+      </Pressable>
+      {attachedNotesVisibility && <CardForSchedule />}
+    </ScrollView>
   );
 };
 
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+    marginBottom: 70,
   },
   textInput: {
     marginBottom: 20,
@@ -147,5 +148,12 @@ const styles = StyleSheet.create({
   textArea: {
     height: 80,
     textAlignVertical: "top",
+  },
+  repeatContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 20,
   },
 });

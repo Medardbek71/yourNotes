@@ -7,22 +7,22 @@ const ScheduleHeader = ({ bottomSheetType }) => {
   console.log(bottomSheetType);
   switch (bottomSheetType) {
     case "Appointment":
-      icon = require("../assets/images/appointment.png");
+      icon = require("../assets/images/calendar.svg");
       break;
     case "Deadline":
-      icon = require("../assets/images/deadline.png");
+      icon = require("../assets/images/deadline.svg");
       break;
     case "Event":
-      icon = require("../assets/images/event.png");
+      icon = require("../assets/images/event.svg");
       break;
     case "Tracker":
-      icon = require("../assets/images/tracker.png");
+      icon = require("../assets/images/tracker.svg");
       break;
     case "Meeting":
-      icon = require("../assets/images/meeting.png");
+      icon = require("../assets/images/meeting.svg");
       break;
     default:
-      icon = require("../assets/images/fab2.png");
+      icon = require("../assets/images/pencil.svg");
       break;
   }
   return (
@@ -42,7 +42,7 @@ const ScheduleHeader = ({ bottomSheetType }) => {
         <View style={styles.centerImage}>
           <Image
             source={icon}
-            style={{ width: 20, height: 20, marginHorizontal: 8 }}
+            style={{ width: 35, height: 35, marginHorizontal: 8 }}
           />
           <Text style={{ fontFamily: "Inter-Regular" }}>{bottomSheetType}</Text>
         </View>
@@ -62,14 +62,16 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     width: "95%",
     margin: 16,
   },
   centerImage: {
     display: "flex",
     flexDirection: "row",
-    width: "20%",
+    width: "40%",
     justifyContent: "center",
+    alignItems: "center",
   },
   separator: {
     display: "flex",

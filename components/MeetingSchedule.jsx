@@ -24,6 +24,7 @@ const MeetingSchedule = () => {
   const [meetingLink, setMeetingLink] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [collaboratorList, setCollaboratorList] = useState([]);
 
   const handlePress = (meetingType) => {
     setMeetingType(meetingType);
@@ -106,7 +107,10 @@ const MeetingSchedule = () => {
             />
           )}
         </View>
-        <CollaboratorList />
+        <CollaboratorList
+          collaboratorList={collaboratorList}
+          setCollaboratorList={setCollaboratorList}
+        />
 
         <View style={styles.textInput}>
           <Text style={styles.label}>Time</Text>
@@ -213,6 +217,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+    marginBottom: 70,
   },
   textInput: {
     marginBottom: 20,

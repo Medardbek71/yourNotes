@@ -76,15 +76,27 @@ const CardForSchedule = () => {
     if (note.type === "normal") {
       return (
         <Pressable
-          onPress={() =>
-            alert("vous venez de selectionner element numero " + note.id)
-          }
+          onPress={() => handleChecked(note.id)}
           style={[
             styles.container,
             { backgroundColor: Colors.background.blue_light },
           ]}
         >
-          <Text style={styles.title}>{note.title}</Text>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Text style={styles.title}>{note.title}</Text>
+            <Checkbox
+              value={note.checked}
+              onValueChange={() => handleChecked(note.id)}
+            />
+          </View>
           <Text style={[styles.content, { color: Colors.text.primary }]}>
             {note.content}
           </Text>
@@ -97,17 +109,17 @@ const CardForSchedule = () => {
             styles.container,
             { backgroundColor: Colors.background.tertiary },
           ]}
-          onPress={() =>
-            alert("vous venez de selectionner element numero " + note.id)
-          }
+          onPress={() => handleChecked(note.id)}
         >
-          <Text style={[styles.title, { color: Colors.background.light }]}>
-            {note.title}
-          </Text>
-          <Checkbox
-            value={note.checked}
-            onValueChange={() => handleChecked(note.id)}
-          />
+          <View>
+            <Text style={[styles.title, { color: Colors.background.light }]}>
+              {note.title}
+            </Text>
+            <Checkbox
+              value={note.checked}
+              onValueChange={() => handleChecked(note.id)}
+            />
+          </View>
           {!itemsIsLoading && items[note.id] ? (
             <View>
               <View>

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-const CollaboratorList = (collaboratorList, setCollaboratorList) => {
+const CollaboratorList = ({ collaboratorList, setCollaboratorList }) => {
   const [error, setError] = useState(undefined);
   const [contacts, setContacts] = useState([]);
   const [contactsAreSelected, setContactsSelected] = useState(false);
@@ -89,7 +89,7 @@ const CollaboratorList = (collaboratorList, setCollaboratorList) => {
 
   return (
     <View style={styles.collaboratorSection}>
-      <Text style={[styles.label, { marginTop: 15 }]}>
+      <Text style={[styles.label, { marginTop: 10, marginBottom: 10 }]}>
         Collaborators ({collaboratorList.length})
       </Text>
       <View style={styles.collaborator}>

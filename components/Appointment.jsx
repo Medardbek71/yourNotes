@@ -8,15 +8,17 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import CardForSchedule from "./CardForSchedule";
 
 const Appointment = () => {
-  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [description, setDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [attachedNotesVisibility, setAttachedNotesVisibility] = useState(false);
 
   const onDatePickerChange = (event, selectedDate) => {
     if (event.type === "set") {
@@ -58,12 +60,12 @@ const Appointment = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View>
         <Text style={styles.label}>Enter meeting title</Text>
         <TextInput
-          value={name}
-          onChangeText={(Text) => setName(Text)}
+          value={title}
+          onChangeText={(Text) => setTitle(Text)}
           placeholder="Enter meeting name"
           style={styles.input}
         />
@@ -114,10 +116,15 @@ const Appointment = () => {
         />
       </View>
       <View>
-        <Text style={styles.label}>Attach note</Text>
-        <CardForSchedule />
+        <Pressable
+          onPress={() => setAttachedNotesVisibility(!attachedNotesVisibility)}
+          style={styles.label}
+        >
+          <Text style={styles.label}> Attach note</Text>
+        </Pressable>
+        {attachedNotesVisibility && <CardForSchedule />}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -128,6 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
+    marginBottom: 70,
   },
   textInput: {
     marginBottom: 20,
