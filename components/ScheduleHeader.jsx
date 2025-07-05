@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const ScheduleHeader = ({ bottomSheetType }) => {
+const ScheduleHeader = ({ bottomSheetType, saveSchedule, resetAll }) => {
   let icon;
   console.log(bottomSheetType);
   switch (bottomSheetType) {
@@ -36,7 +36,7 @@ const ScheduleHeader = ({ bottomSheetType }) => {
       }}
     >
       <View style={styles.container}>
-        <Pressable onPress={() => alert("Canceled")}>
+        <Pressable onPress={() => resetAll()}>
           <Text style={{ fontFamily: "Inter-Regular" }}> Cancel</Text>
         </Pressable>
         <View style={styles.centerImage}>
@@ -46,7 +46,7 @@ const ScheduleHeader = ({ bottomSheetType }) => {
           />
           <Text style={{ fontFamily: "Inter-Regular" }}>{bottomSheetType}</Text>
         </View>
-        <Pressable onPress={() => alert("saved")}>
+        <Pressable onPress={() => saveSchedule()}>
           <Text style={{ fontFamily: "Inter-Regular" }}>Save</Text>
         </Pressable>
       </View>
@@ -82,5 +82,6 @@ const styles = StyleSheet.create({
     backgroundColor: "grey",
     width: "90%",
     height: 1,
+    marginBottom: 20,
   },
 });

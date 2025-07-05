@@ -34,6 +34,7 @@ export default function RootLayout() {
           time TIME NOT NULL ,
           date DATETIME NOT NULL ,
           type VARCHAR(255) NOT NULL ,
+          place VARCHAR(255) ,
           link VARCHAR(255) ,
           collaboratorList VARCHAR(255) ,
           attachedNote VARCHAR(255) ,

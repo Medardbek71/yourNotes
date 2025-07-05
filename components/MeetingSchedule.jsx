@@ -1,5 +1,6 @@
 import Colors from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSQLiteContext } from "expo-sqlite";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -14,8 +15,9 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
+import ScheduleHeader from "./ScheduleHeader";
 
-const MeetingSchedule = () => {
+const MeetingSchedule = ({ bottomSheetRef }) => {
   const [meetingTitle, setMeetingTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState(new Date());
   const [meetingTime, setMeetingTime] = useState(new Date());
@@ -25,6 +27,8 @@ const MeetingSchedule = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [collaboratorList, setCollaboratorList] = useState([]);
+
+  const database = useSQLiteContext();
 
   const handlePress = (meetingType) => {
     setMeetingType(meetingType);
@@ -63,6 +67,17 @@ const MeetingSchedule = () => {
     });
   };
 
+  const resetAll = () => {
+    setMeetingTitle("");
+    setMeetingDescription("");
+    setMeetingTime(new Date());
+    setMeetingDate(new Date());
+    setMeetingLink("");
+    setCollaboratorList([]);
+    setMeetingType("");
+    bottomSheetRef.current.close();
+  };
+
   const formatTime = (date) => {
     return date.toLocaleTimeString("fr-FR", {
       hour: "2-digit",
@@ -70,8 +85,35 @@ const MeetingSchedule = () => {
     });
   };
 
+  const saveMeeting = () => {
+    try {
+      database.runAsync(
+        `INSERT INTO schedule (title , description , time , date , type , link , collaboratorList ) VALUES (?,?,?,?,?,?,?,?)`,
+        [
+          meetingTitle,
+          meetingDescription,
+          meetingTime,
+          meetingDate,
+          meetingType,
+          "Meeting",
+          meetingLink,
+          collaboratorList,
+        ]
+      );
+      console.log("enregistrement de la reunion en base de donnée reussi");
+      resetAll();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView>
+      <ScheduleHeader
+        bottomSheetType={"Meeting"}
+        saveSchedule={saveMeeting}
+        resetAll={resetAll}
+      />
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "android" ? "padding" : "height"}

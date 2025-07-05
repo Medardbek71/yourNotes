@@ -1,4 +1,5 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSQLiteContext } from "expo-sqlite";
 import React, { useState } from "react";
 import {
   Platform,
@@ -10,8 +11,9 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import CardForSchedule from "./CardForSchedule";
+import ScheduleHeader from "./ScheduleHeader";
 
-const Appointment = () => {
+const Appointment = ({ bottomSheetRef }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -19,6 +21,8 @@ const Appointment = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [attachedNotesVisibility, setAttachedNotesVisibility] = useState(false);
+
+  const database = useSQLiteContext();
 
   const onDatePickerChange = (event, selectedDate) => {
     if (event.type === "set") {
@@ -59,8 +63,30 @@ const Appointment = () => {
     });
   };
 
+  const saveAppointment = () => {
+    try {
+      database.runAsync(
+        `INSERT INTO schedule (title , description , date , time ) VALUES (?,?,?,?)`,
+        [title, description, date, time]
+      );
+      resetAll();
+      console.log("appointment is register in the db");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const resetAll = () => {
+    setTitle("");
+    setDate(new Date());
+    setTime(new Date());
+    setDescription("");
+    bottomSheetRef.current.close();
+  };
+
   return (
     <ScrollView style={styles.container}>
+      <ScheduleHeader saveSchedule={saveAppointment} resetAll={resetAll} />
       <View>
         <Text style={styles.label}>Enter meeting title</Text>
         <TextInput

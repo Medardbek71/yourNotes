@@ -6,7 +6,6 @@ import EventSchedule from "@/components/EventSchedule";
 import Header from "@/components/Header";
 import ImageForEmptySpace from "@/components/ImageForEmptySpace";
 import MeetingSchedule from "@/components/MeetingSchedule";
-import ScheduleHeader from "@/components/ScheduleHeader";
 import TrackerSchedule from "@/components/TrackerSchedule";
 import Colors from "@/constants/Colors";
 import BottomSheet from "@gorhom/bottom-sheet";
@@ -40,7 +39,7 @@ export default function Index() {
     setBottomSheetLevel(-1);
     setFloatingButtonVisibility(true);
   };
-
+  console.log(bottomSheetLevel);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView
@@ -110,14 +109,22 @@ export default function Index() {
             height: 3,
           }}
           nestedScrollEnabled={true}
-          closeBottomSheet={closeBottomSheet}
         >
-          <ScheduleHeader bottomSheetType={bottomSheetType} />
-          {bottomSheetType === "Meeting" && <MeetingSchedule />}
-          {bottomSheetType === "Appointment" && <AppointmentSchedule />}
-          {bottomSheetType === "Deadline" && <DeadLineSchedule />}
-          {bottomSheetType === "Event" && <EventSchedule />}
-          {bottomSheetType === "Tracker" && <TrackerSchedule />}
+          {bottomSheetType === "Meeting" && (
+            <MeetingSchedule bottomSheetRef={bottomSheetRef} />
+          )}
+          {bottomSheetType === "Appointment" && (
+            <AppointmentSchedule bottomSheetRef={bottomSheetRef} />
+          )}
+          {bottomSheetType === "Event" && (
+            <EventSchedule bottomSheetRef={bottomSheetRef} />
+          )}
+          {bottomSheetType === "Tracker" && (
+            <TrackerSchedule bottomSheetRef={bottomSheetRef} />
+          )}
+          {bottomSheetType === "Deadline" && (
+            <DeadLineSchedule bottomSheetRef={bottomSheetRef} />
+          )}
         </BottomSheet>
       </SafeAreaView>
     </GestureHandlerRootView>

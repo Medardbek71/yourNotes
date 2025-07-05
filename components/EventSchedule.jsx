@@ -1,4 +1,5 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSQLiteContext } from "expo-sqlite";
 import React, { useState } from "react";
 import {
   Platform,
@@ -11,8 +12,9 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
+import ScheduleHeader from "./ScheduleHeader";
 
-const EventSchedule = () => {
+const EventSchedule = ({ bottomSheetRef }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -20,6 +22,8 @@ const EventSchedule = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [attachedNotesVisibility, setAttachedNotesVisibility] = useState(false);
+
+  const database = useSQLiteContext();
 
   const onDatePickerChange = (event, selectedDate) => {
     if (event.type === "set") {
@@ -66,8 +70,30 @@ const EventSchedule = () => {
     setAttachedNotesVisibility(attachedNotesVisibilityCopy);
   };
 
+  const saveEvent = () => {
+    try {
+      database.runAsync(
+        `INSERT INTO schedule ( title , date ,time , collaboratorList) VALUES (?,?,?,?)`,
+        [title, date, time, collaboratorList]
+      );
+      console.log("register is successfull");
+      resetAll();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const resetAll = () => {
+    setTitle("");
+    setDate(new Date());
+    setTime(new Date());
+    setCollaboratorList([]);
+    bottomSheetRef.current.close();
+  };
+
   return (
     <ScrollView style={styles.container}>
+      <ScheduleHeader saveSchedule={saveEvent} resetAll={resetAll} />
       <View style={styles.textInput}>
         <Text style={styles.label}>Event title</Text>
         <TextInput

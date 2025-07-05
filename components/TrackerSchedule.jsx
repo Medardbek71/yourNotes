@@ -2,6 +2,7 @@ import CardForSchedule from "@/components/CardForSchedule";
 import TrackingDays from "@/components/TrackingDays";
 import Colors from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSQLiteContext } from "expo-sqlite";
 import React, { useState } from "react";
 import {
   Platform,
@@ -13,8 +14,9 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import ToggleSwitch from "toggle-switch-react-native";
+import ScheduleHeader from "./ScheduleHeader";
 
-const TrackerSchedule = () => {
+const TrackerSchedule = ({ bottomSheetRef }) => {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState(new Date());
   const [repeat, setRepeat] = useState(false);
@@ -30,6 +32,8 @@ const TrackerSchedule = () => {
     saturday: false,
     sunday: false,
   });
+
+  const database = useSQLiteContext();
 
   const toggleNoteVisibility = () => {
     const attachedNotesVisibilityCopy = !attachedNotesVisibility;
@@ -55,8 +59,36 @@ const TrackerSchedule = () => {
     }
   };
 
+  const selectedDays = {
+    repeat: repeat,
+    daysSelected: selectedDays,
+  };
+  const storedDays = JSON.stringify(selectedDays);
+
+  const saveTracker = () => {
+    try {
+      database.runAsync(
+        `INSERT INTO schedule ( title , description , time ,trackedDay)`,
+        [title, description, time, storedDays]
+      );
+      resetAll();
+      alert("everything is ok");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const resetAll = () => {
+    setTitle("");
+    setTime(new Date());
+    setRepeat(false);
+    setDescription("");
+    bottomSheetRef.current.close();
+  };
+
   return (
     <ScrollView style={styles.container}>
+      <ScheduleHeader saveSchedule={saveTracker} resetAll={resetAll} />
       <View style={styles.textInput}>
         <Text style={styles.label}>Title</Text>
         <TextInput

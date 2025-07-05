@@ -1,4 +1,5 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSQLiteContext } from "expo-sqlite";
 import React, { useState } from "react";
 import {
   Platform,
@@ -10,19 +11,22 @@ import {
   View,
 } from "react-native";
 import CardForSchedule from "./CardForSchedule";
+import ScheduleHeader from "./ScheduleHeader";
 
-const DeadLineSchedule = () => {
-  const [meetingTitle, setMeetingTitle] = useState("");
-  const [meetingDate, setMeetingDate] = useState(new Date());
-  const [meetingTime, setMeetingTime] = useState(new Date());
+const DeadLineSchedule = ({ bottomSheetRef }) => {
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [description, setDescription] = useState("");
 
+  const database = useSQLiteContext();
+
   const onDatePickerChange = (event, selectedDate) => {
     if (event.type === "set") {
-      const currentDate = selectedDate || meetingDate;
-      setMeetingDate(currentDate);
+      const currentDate = selectedDate || date;
+      setDate(currentDate);
       if (Platform.OS === "android") {
         setShowDatePicker(false);
       }
@@ -33,8 +37,8 @@ const DeadLineSchedule = () => {
 
   const onTimePickerChange = (event, selectedTime) => {
     if (event.type === "set") {
-      const currentTime = selectedTime || meetingTime;
-      setMeetingTime(currentTime);
+      const currentTime = selectedTime || time;
+      setTime(currentTime);
       if (Platform.OS === "android") {
         setShowTimePicker(false);
       }
@@ -57,15 +61,39 @@ const DeadLineSchedule = () => {
       minute: "2-digit",
     });
   };
+
+  const saveDeadline = () => {
+    try {
+      database.runAsync(
+        `INSERT INTO schedule (title,description ,date, time ,type)`,
+        [title, description]
+      );
+      resetAll();
+      alert("deadline registered successfully");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const resetAll = () => {
+    setTitle("");
+    setDate("");
+    setTime(new Date());
+    setDate(new Date());
+    setDescription("");
+    bottomSheetRef.current.close();
+  };
+
   return (
     <ScrollView style={styles.container}>
+      <ScheduleHeader saveSchedule={saveDeadline} resetAll={resetAll} />
       <View style={styles.textInput}>
-        <Text style={styles.label}>Meeting Title</Text>
+        <Text style={styles.label}>Title</Text>
         <TextInput
           style={styles.input}
-          value={meetingTitle}
-          onChangeText={setMeetingTitle}
-          placeholder="Enter meeting Title"
+          onChangeText={(text) => setTitle(text)}
+          placeholder="Title"
+          value={title}
         />
       </View>
       <View style={styles.textInput}>
@@ -73,7 +101,7 @@ const DeadLineSchedule = () => {
         <Pressable onPress={() => setShowDatePicker(true)}>
           <TextInput
             style={styles.input}
-            value={formatDate(meetingDate)}
+            value={formatDate(date)}
             editable={false}
           />
         </Pressable>
@@ -82,7 +110,7 @@ const DeadLineSchedule = () => {
           <DateTimePicker
             mode="date"
             display={Platform.OS === "android" ? "default" : "spinner"}
-            value={meetingDate}
+            value={date}
             onChange={onDatePickerChange}
             minimumDate={new Date()}
             maximumDate={new Date("2025-12-31")}
@@ -94,7 +122,7 @@ const DeadLineSchedule = () => {
         <Pressable onPress={() => setShowTimePicker(true)}>
           <TextInput
             style={styles.input}
-            value={formatTime(meetingTime)}
+            value={formatTime(time)}
             editable={false}
           />
         </Pressable>
@@ -103,7 +131,7 @@ const DeadLineSchedule = () => {
           <DateTimePicker
             mode="time"
             display={Platform.OS === "android" ? "default" : "spinner"}
-            value={meetingTime}
+            value={time}
             onChange={onTimePickerChange}
           />
         )}
@@ -113,7 +141,7 @@ const DeadLineSchedule = () => {
         <TextInput
           style={[styles.input, styles.textArea]}
           value={description}
-          onChangeText={setDescription}
+          onChangeText={(text) => setDescription(text)}
           placeholder="write something"
           multiline={true}
           numberOfLines={3}
