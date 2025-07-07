@@ -31,8 +31,8 @@ export default function RootLayout() {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title VARCHAR(255) NOT NULL,
           description VARCHAR(255),
-          time TIME NOT NULL ,
-          date DATETIME NOT NULL ,
+          time TIME ,
+          date DATETIME ,
           type VARCHAR(255) NOT NULL ,
           place VARCHAR(255) ,
           link VARCHAR(255) ,
@@ -46,6 +46,8 @@ export default function RootLayout() {
       console.error("database creation error:", error);
     }
   };
+
+  // SQLite.deleteDatabaseAsync("yourNotesDb.db");
 
   return (
     <>

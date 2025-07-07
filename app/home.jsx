@@ -4,8 +4,8 @@ import CreateScheduleButton from "@/components/CreateScheduleButton";
 import DeadLineSchedule from "@/components/DeadLineSchedule";
 import EventSchedule from "@/components/EventSchedule";
 import Header from "@/components/Header";
-import ImageForEmptySpace from "@/components/ImageForEmptySpace";
 import MeetingSchedule from "@/components/MeetingSchedule";
+import ScheduleWrapper from "@/components/ScheduleWrapper";
 import TrackerSchedule from "@/components/TrackerSchedule";
 import Colors from "@/constants/Colors";
 import BottomSheet from "@gorhom/bottom-sheet";
@@ -62,7 +62,7 @@ export default function Index() {
           >
             Agenda du jour
           </Text>
-          <ImageForEmptySpace />
+          <ScheduleWrapper />
         </ScrollView>
 
         {(floatingActionButtonIsOpen || bottomSheetLevel === 0) && (
@@ -111,19 +111,19 @@ export default function Index() {
           nestedScrollEnabled={true}
         >
           {bottomSheetType === "Meeting" && (
-            <MeetingSchedule bottomSheetRef={bottomSheetRef} />
+            <MeetingSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
           )}
           {bottomSheetType === "Appointment" && (
-            <AppointmentSchedule bottomSheetRef={bottomSheetRef} />
+            <AppointmentSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
           )}
           {bottomSheetType === "Event" && (
-            <EventSchedule bottomSheetRef={bottomSheetRef} />
+            <EventSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
           )}
           {bottomSheetType === "Tracker" && (
-            <TrackerSchedule bottomSheetRef={bottomSheetRef} />
+            <TrackerSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
           )}
           {bottomSheetType === "Deadline" && (
-            <DeadLineSchedule bottomSheetRef={bottomSheetRef} />
+            <DeadLineSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
           )}
         </BottomSheet>
       </SafeAreaView>

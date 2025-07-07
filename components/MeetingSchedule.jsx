@@ -17,12 +17,12 @@ import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
 import ScheduleHeader from "./ScheduleHeader";
 
-const MeetingSchedule = ({ bottomSheetRef }) => {
+const MeetingSchedule = ({ bottomSheetRef, bottomSheetType }) => {
   const [meetingTitle, setMeetingTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState(new Date());
   const [meetingTime, setMeetingTime] = useState(new Date());
   const [meetingDescription, setMeetingDescription] = useState("");
-  const [meetingType, setMeetingType] = useState("");
+  const [meetingPlace, setMeetingPlace] = useState("");
   const [meetingLink, setMeetingLink] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -30,9 +30,8 @@ const MeetingSchedule = ({ bottomSheetRef }) => {
 
   const database = useSQLiteContext();
 
-  const handlePress = (meetingType) => {
-    setMeetingType(meetingType);
-    console.log(meetingType);
+  const handlePress = (meetingPlace) => {
+    setMeetingPlace(meetingPlace);
   };
 
   const onDatePickerChange = (event, selectedDate) => {
@@ -74,7 +73,7 @@ const MeetingSchedule = ({ bottomSheetRef }) => {
     setMeetingDate(new Date());
     setMeetingLink("");
     setCollaboratorList([]);
-    setMeetingType("");
+    setMeetingPlace("");
     bottomSheetRef.current.close();
   };
 
@@ -88,18 +87,19 @@ const MeetingSchedule = ({ bottomSheetRef }) => {
   const saveMeeting = () => {
     try {
       database.runAsync(
-        `INSERT INTO schedule (title , description , time , date , type , link , collaboratorList ) VALUES (?,?,?,?,?,?,?,?)`,
+        `INSERT INTO schedule (title , description , time , date , link ,place, collaboratorList ,type ) VALUES (?,?,?,?,?,?,?,?)`,
         [
           meetingTitle,
           meetingDescription,
-          meetingTime,
-          meetingDate,
-          meetingType,
-          "Meeting",
+          meetingTime.toTimeString(),
+          meetingDate.toDateString(),
           meetingLink,
+          meetingPlace,
           collaboratorList,
+          "Meeting",
         ]
       );
+
       console.log("enregistrement de la reunion en base de donnée reussi");
       resetAll();
     } catch (error) {
@@ -201,14 +201,14 @@ const MeetingSchedule = ({ bottomSheetRef }) => {
                 styles.meetingTypeStyle,
                 {
                   backgroundColor:
-                    meetingType === "online"
+                    meetingPlace === "online"
                       ? Colors.background.secondary
                       : "white",
                 },
               ]}
             >
               <Text
-                style={{ color: meetingType === "online" ? "white" : "black" }}
+                style={{ color: meetingPlace === "online" ? "white" : "black" }}
               >
                 Online
               </Text>
@@ -220,14 +220,14 @@ const MeetingSchedule = ({ bottomSheetRef }) => {
                 styles.meetingTypeStyle,
                 {
                   backgroundColor:
-                    meetingType === "office"
+                    meetingPlace === "office"
                       ? Colors.background.secondary
                       : "white",
                 },
               ]}
             >
               <Text
-                style={{ color: meetingType === "office" ? "white" : "black" }}
+                style={{ color: meetingPlace === "office" ? "white" : "black" }}
               >
                 Office
               </Text>

@@ -13,7 +13,7 @@ import {
 import CardForSchedule from "./CardForSchedule";
 import ScheduleHeader from "./ScheduleHeader";
 
-const DeadLineSchedule = ({ bottomSheetRef }) => {
+const DeadLineSchedule = ({ bottomSheetRef, bottomSheetType }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -65,8 +65,14 @@ const DeadLineSchedule = ({ bottomSheetRef }) => {
   const saveDeadline = () => {
     try {
       database.runAsync(
-        `INSERT INTO schedule (title,description ,date, time ,type)`,
-        [title, description]
+        `INSERT INTO schedule (title,description ,date, time ,type) VALUES (?,?,?,?,?)`,
+        [
+          title,
+          description,
+          date.toDateString(),
+          time.toTimeString(),
+          "deadline",
+        ]
       );
       resetAll();
       alert("deadline registered successfully");
@@ -86,7 +92,11 @@ const DeadLineSchedule = ({ bottomSheetRef }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <ScheduleHeader saveSchedule={saveDeadline} resetAll={resetAll} />
+      <ScheduleHeader
+        saveSchedule={saveDeadline}
+        resetAll={resetAll}
+        bottomSheetType={bottomSheetType}
+      />
       <View style={styles.textInput}>
         <Text style={styles.label}>Title</Text>
         <TextInput

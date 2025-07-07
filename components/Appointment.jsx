@@ -13,7 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import CardForSchedule from "./CardForSchedule";
 import ScheduleHeader from "./ScheduleHeader";
 
-const Appointment = ({ bottomSheetRef }) => {
+const Appointment = ({ bottomSheetRef, bottomSheetType }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -66,8 +66,14 @@ const Appointment = ({ bottomSheetRef }) => {
   const saveAppointment = () => {
     try {
       database.runAsync(
-        `INSERT INTO schedule (title , description , date , time ) VALUES (?,?,?,?)`,
-        [title, description, date, time]
+        `INSERT INTO schedule (title , description , date , time , type ) VALUES (?,?,?,?,?)`,
+        [
+          title,
+          description,
+          date.toDateString(),
+          time.toTimeString(),
+          "appointment",
+        ]
       );
       resetAll();
       console.log("appointment is register in the db");
@@ -86,7 +92,11 @@ const Appointment = ({ bottomSheetRef }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <ScheduleHeader saveSchedule={saveAppointment} resetAll={resetAll} />
+      <ScheduleHeader
+        saveSchedule={saveAppointment}
+        resetAll={resetAll}
+        bottomSheetType={bottomSheetType}
+      />
       <View>
         <Text style={styles.label}>Enter meeting title</Text>
         <TextInput

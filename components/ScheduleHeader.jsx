@@ -4,7 +4,6 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const ScheduleHeader = ({ bottomSheetType, saveSchedule, resetAll }) => {
   let icon;
-  console.log(bottomSheetType);
   switch (bottomSheetType) {
     case "Appointment":
       icon = require("../assets/images/calendar.svg");

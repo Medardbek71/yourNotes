@@ -16,7 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import ToggleSwitch from "toggle-switch-react-native";
 import ScheduleHeader from "./ScheduleHeader";
 
-const TrackerSchedule = ({ bottomSheetRef }) => {
+const TrackerSchedule = ({ bottomSheetRef, bottomSheetType }) => {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState(new Date());
   const [repeat, setRepeat] = useState(false);
@@ -61,20 +61,21 @@ const TrackerSchedule = ({ bottomSheetRef }) => {
 
   const selectedDays = {
     repeat: repeat,
-    daysSelected: selectedDays,
+    daysSelected: trackedDay,
   };
   const storedDays = JSON.stringify(selectedDays);
-
-  const saveTracker = () => {
+  const saveTracker = async () => {
     try {
-      database.runAsync(
-        `INSERT INTO schedule ( title , description , time ,trackedDay)`,
-        [title, description, time, storedDays]
+      await database.runAsync(
+        `INSERT INTO schedule (title, description, time, trackedDay, type) VALUES (?,?,?,?,?)`,
+        [title, description, time.toTimeString(), storedDays, "tracker"]
       );
+      console.log("données dans la db");
+      alert("données dans la db");
       resetAll();
-      alert("everything is ok");
     } catch (error) {
-      console.log(error);
+      console.log("Erreur lors de l'insertion:", error);
+      alert("Erreur: " + error.message);
     }
   };
 
@@ -88,7 +89,11 @@ const TrackerSchedule = ({ bottomSheetRef }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <ScheduleHeader saveSchedule={saveTracker} resetAll={resetAll} />
+      <ScheduleHeader
+        saveSchedule={saveTracker}
+        resetAll={resetAll}
+        bottomSheetType={bottomSheetType}
+      />
       <View style={styles.textInput}>
         <Text style={styles.label}>Title</Text>
         <TextInput

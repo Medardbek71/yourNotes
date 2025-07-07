@@ -14,7 +14,7 @@ import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
 import ScheduleHeader from "./ScheduleHeader";
 
-const EventSchedule = ({ bottomSheetRef }) => {
+const EventSchedule = ({ bottomSheetRef, bottomSheetType }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -65,7 +65,6 @@ const EventSchedule = ({ bottomSheetRef }) => {
   };
 
   const toggleNoteVisibility = () => {
-    console.log("yoyo");
     const attachedNotesVisibilityCopy = !attachedNotesVisibility;
     setAttachedNotesVisibility(attachedNotesVisibilityCopy);
   };
@@ -73,9 +72,16 @@ const EventSchedule = ({ bottomSheetRef }) => {
   const saveEvent = () => {
     try {
       database.runAsync(
-        `INSERT INTO schedule ( title , date ,time , collaboratorList) VALUES (?,?,?,?)`,
-        [title, date, time, collaboratorList]
+        `INSERT INTO schedule ( title , date ,time , collaboratorList , type) VALUES (?,?,?,?,?)`,
+        [
+          title,
+          date.toDateString(),
+          time.toTimeString(),
+          collaboratorList,
+          "event",
+        ]
       );
+
       console.log("register is successfull");
       resetAll();
     } catch (error) {
@@ -93,7 +99,11 @@ const EventSchedule = ({ bottomSheetRef }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <ScheduleHeader saveSchedule={saveEvent} resetAll={resetAll} />
+      <ScheduleHeader
+        saveSchedule={saveEvent}
+        resetAll={resetAll}
+        bottomSheetType={bottomSheetType}
+      />
       <View style={styles.textInput}>
         <Text style={styles.label}>Event title</Text>
         <TextInput
@@ -134,7 +144,7 @@ const EventSchedule = ({ bottomSheetRef }) => {
         <DateTimePicker
           mode="time"
           display={Platform.OS === "android" ? "default" : "spinner"}
-          value={date}
+          value={time}
           onChange={onTimePickerChange}
         />
       )}
