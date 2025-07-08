@@ -75,8 +75,8 @@ const EventSchedule = ({ bottomSheetRef, bottomSheetType }) => {
         `INSERT INTO schedule ( title , date ,time , collaboratorList , type) VALUES (?,?,?,?,?)`,
         [
           title,
-          date.toDateString(),
-          time.toTimeString(),
+          date.toLocaleString(),
+          time.toLocaleTimeString(),
           collaboratorList,
           "event",
         ]

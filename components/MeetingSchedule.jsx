@@ -91,8 +91,8 @@ const MeetingSchedule = ({ bottomSheetRef, bottomSheetType }) => {
         [
           meetingTitle,
           meetingDescription,
-          meetingTime.toTimeString(),
-          meetingDate.toDateString(),
+          meetingTime.toLocaleDateString(),
+          meetingDate.toLocaleDateString(),
           meetingLink,
           meetingPlace,
           collaboratorList,

@@ -1,5 +1,6 @@
 import { TitleContext } from "@/contexts/TitleContext";
 import { Stack } from "expo-router";
+// import * as SQLite from "expo-sqlite";
 import { SQLiteProvider } from "expo-sqlite";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
@@ -31,7 +32,7 @@ export default function RootLayout() {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title VARCHAR(255) NOT NULL,
           description VARCHAR(255),
-          time TIME ,
+          time DATETIME ,
           date DATETIME ,
           type VARCHAR(255) NOT NULL ,
           place VARCHAR(255) ,

@@ -1,6 +1,6 @@
 import { useSQLiteContext } from "expo-sqlite";
 import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ImageForEmptySpace from "./ImageForEmptySpace";
 import ScheduleItem from "./ScheduleItem";
 
@@ -23,26 +23,14 @@ const ScheduleWrapper = () => {
     loadData();
   }, [database]);
 
-  const renderScheduleItems = () => {
-    scheduleData.map((schedule) => {
-      switch (schedule.type) {
-        case "meeting":
-          return <ScheduleItem id={schedule.id} />;
-        case "appointment":
-          return <ScheduleItem id={schedule.id} />;
-        case "tracker":
-          return <ScheduleItem id={schedule.id} />;
-        case "event":
-          return <ScheduleItem id={schedule.id} />;
-        default:
-          return <ScheduleItem id={schedule.id} />;
-      }
-    });
-  };
   return scheduleData.length === 0 ? (
     <ImageForEmptySpace />
   ) : (
-    renderScheduleItems()
+    scheduleData.map((schedule) => (
+      <View key={schedule.id}>
+        <ScheduleItem id={schedule.id} />
+      </View>
+    ))
   );
 };
 
