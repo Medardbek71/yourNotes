@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import ImageForEmptySpace from "./ImageForEmptySpace";
 import ScheduleItem from "./ScheduleItem";
 
-const ScheduleWrapper = () => {
+const ScheduleWrapper = ({ setEditMode, openBottomSheet, setEditItem }) => {
   const [loading, setLoading] = useState(false);
   const [scheduleData, setScheduleData] = useState([] || null);
   const database = useSQLiteContext();
@@ -28,7 +28,12 @@ const ScheduleWrapper = () => {
   ) : (
     scheduleData.map((schedule) => (
       <View key={schedule.id}>
-        <ScheduleItem id={schedule.id} />
+        <ScheduleItem
+          id={schedule.id}
+          openBottomSheet={openBottomSheet}
+          setEditMode={setEditMode}
+          setEditItem={setEditItem}
+        />
       </View>
     ))
   );

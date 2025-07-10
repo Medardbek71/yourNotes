@@ -9,8 +9,9 @@ import ScheduleWrapper from "@/components/ScheduleWrapper";
 import TrackerSchedule from "@/components/TrackerSchedule";
 import Colors from "@/constants/Colors";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { useRef, useState } from "react";
-import { Pressable, ScrollView, Text } from "react-native";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useRef, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -21,6 +22,12 @@ export default function Index() {
   const [bottomSheetType, setBottomSheetType] = useState("null");
   const [floatingButtonVisibility, setFloatingButtonVisibility] =
     useState(true);
+  const [editMode, setEditMode] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [editType, setEditType] = useState(null);
+
+  const database = useSQLiteContext();
 
   const bottomSheetRef = useRef(null);
 
@@ -39,7 +46,26 @@ export default function Index() {
     setBottomSheetLevel(-1);
     setFloatingButtonVisibility(true);
   };
-  console.log(bottomSheetLevel);
+  useEffect(() => {
+    try {
+      const loadTypeForEditing = async (editItem) => {
+        setLoading(true);
+        const editedType = await database.getFirstAsync(
+          `SELECT * FROM schedule WHERE id = ? `,
+          [editItem]
+        );
+        setLoading(false);
+        console.log("voici le type editer", editType);
+        console.log("voici le", editedType);
+        setEditType(editedType);
+      };
+      loadTypeForEditing();
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [database, loading]);
+  console.log(editType);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView
@@ -62,7 +88,11 @@ export default function Index() {
           >
             Agenda du jour
           </Text>
-          <ScheduleWrapper />
+          <ScheduleWrapper
+            setEditMode={setEditMode}
+            openBottomSheet={openBottomSheet}
+            setEditItem={setEditItem}
+          />
         </ScrollView>
 
         {(floatingActionButtonIsOpen || bottomSheetLevel === 0) && (
@@ -110,20 +140,49 @@ export default function Index() {
           }}
           nestedScrollEnabled={true}
         >
-          {bottomSheetType === "Meeting" && (
-            <MeetingSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
+          {editMode ? (
+            <View>{!loading && <Text>{editItem}</Text>}</View>
+          ) : (
+            bottomSheetType === "Meeting" && (
+              <MeetingSchedule
+                bottomSheetRef={bottomSheetRef}
+                bottomSheetType={bottomSheetType}
+                editMode={editMode}
+                setEditMode={setEditMode}
+              />
+            )
           )}
           {bottomSheetType === "Appointment" && (
-            <AppointmentSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
+            <AppointmentSchedule
+              bottomSheetRef={bottomSheetRef}
+              bottomSheetType={bottomSheetType}
+              editMode={editMode}
+              setEditMode={setEditMode}
+            />
           )}
           {bottomSheetType === "Event" && (
-            <EventSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
+            <EventSchedule
+              bottomSheetRef={bottomSheetRef}
+              bottomSheetType={bottomSheetType}
+              editMode={editMode}
+              setEditMode={setEditMode}
+            />
           )}
           {bottomSheetType === "Tracker" && (
-            <TrackerSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
+            <TrackerSchedule
+              bottomSheetRef={bottomSheetRef}
+              bottomSheetType={bottomSheetType}
+              editMode={editMode}
+              setEditMode={setEditMode}
+            />
           )}
           {bottomSheetType === "Deadline" && (
-            <DeadLineSchedule bottomSheetRef={bottomSheetRef} bottomSheetType={bottomSheetType}/>
+            <DeadLineSchedule
+              bottomSheetRef={bottomSheetRef}
+              bottomSheetType={bottomSheetType}
+              editMode={editMode}
+              setEditMode={setEditMode}
+            />
           )}
         </BottomSheet>
       </SafeAreaView>

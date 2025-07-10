@@ -4,13 +4,13 @@ import { useSQLiteContext } from "expo-sqlite";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
-const ScheduleItem = ({ id }) => {
+const ScheduleItem = ({ id, openBottomSheet, setEditMode, setEditItem }) => {
   const [loading, setLoading] = useState(true); // Commencer avec loading à true
   const [schedule, setSchedule] = useState(null); // Initialiser comme null
   const database = useSQLiteContext();
@@ -72,8 +72,8 @@ const ScheduleItem = ({ id }) => {
 
   return (
     <View>
-      <Pressable
-        onPress={() => alert(schedule.id)}
+      <TouchableOpacity
+        onPress={() => (openBottomSheet(), setEditMode(true), setEditItem(id))}
         style={{
           display: "flex",
           width: "90%",
@@ -179,7 +179,7 @@ const ScheduleItem = ({ id }) => {
             )}
           </View>
         </View>
-      </Pressable>
+      </TouchableOpacity>
       <View
         style={{
           borderBottomWidth: 0.2,

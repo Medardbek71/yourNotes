@@ -17,7 +17,7 @@ import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
 import ScheduleHeader from "./ScheduleHeader";
 
-const MeetingSchedule = ({ bottomSheetRef, bottomSheetType }) => {
+const MeetingSchedule = ({ bottomSheetRef }) => {
   const [meetingTitle, setMeetingTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState(new Date());
   const [meetingTime, setMeetingTime] = useState(new Date());
@@ -91,8 +91,8 @@ const MeetingSchedule = ({ bottomSheetRef, bottomSheetType }) => {
         [
           meetingTitle,
           meetingDescription,
-          meetingTime.toLocaleDateString(),
-          meetingDate.toLocaleDateString(),
+          meetingTime,
+          meetingDate,
           meetingLink,
           meetingPlace,
           collaboratorList,
