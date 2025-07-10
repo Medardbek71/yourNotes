@@ -2,7 +2,12 @@ import { Image } from "expo-image";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const ScheduleHeader = ({ bottomSheetType, saveSchedule, resetAll }) => {
+const ScheduleHeader = ({
+  bottomSheetType,
+  saveSchedule,
+  resetAll,
+  editMode,
+}) => {
   let icon;
   switch (bottomSheetType) {
     case "Appointment":
@@ -46,7 +51,11 @@ const ScheduleHeader = ({ bottomSheetType, saveSchedule, resetAll }) => {
           <Text style={{ fontFamily: "Inter-Regular" }}>{bottomSheetType}</Text>
         </View>
         <Pressable onPress={() => saveSchedule()}>
-          <Text style={{ fontFamily: "Inter-Regular" }}>Save</Text>
+          {editMode ? (
+            <Text style={{ fontFamily: "Inter-Regular" }}>Update</Text>
+          ) : (
+            <Text style={{ fontFamily: "Inter-Regular" }}>Save</Text>
+          )}
         </Pressable>
       </View>
       <View style={styles.separator}></View>

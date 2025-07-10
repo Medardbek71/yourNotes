@@ -11,7 +11,13 @@ import Colors from "@/constants/Colors";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -23,48 +29,188 @@ export default function Index() {
   const [floatingButtonVisibility, setFloatingButtonVisibility] =
     useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [editItem, setEditItem] = useState(null);
+  const [itemId, setItemId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [editType, setEditType] = useState(null);
+  const [editType, setEditType] = useState("");
 
   const database = useSQLiteContext();
-
   const bottomSheetRef = useRef(null);
-
   const snapPoints = ["90%", "65%"];
 
-  const setBottomSheetSnapPoint = () => {};
-  setBottomSheetSnapPoint();
-
+  // Fonction pour ouvrir le bottom sheet
   const openBottomSheet = () => {
     setBottomSheetLevel(0);
     setFloatingActionButtonState(false);
     setFloatingButtonVisibility(false);
   };
 
+  // Fonction pour fermer le bottom sheet et réinitialiser les états
   const closeBottomSheet = () => {
     setBottomSheetLevel(-1);
     setFloatingButtonVisibility(true);
+    setEditMode(false);
+    setItemId(null);
+    setBottomSheetType("null");
+    setEditType("");
   };
+
+  // Effect pour récupérer le type d'élément lors de l'édition
   useEffect(() => {
-    try {
-      const loadTypeForEditing = async (editItem) => {
+    const getTypeForEditing = async (itemId) => {
+      if (!itemId || !editMode) return;
+
+      try {
         setLoading(true);
-        const editedType = await database.getFirstAsync(
-          `SELECT * FROM schedule WHERE id = ? `,
-          [editItem]
+        const queryResult = await database.getFirstAsync(
+          `SELECT type FROM schedule WHERE id = ?`,
+          [itemId]
         );
+
+        if (queryResult) {
+          setEditType(queryResult.type);
+          console.log("Type récupéré:", queryResult.type);
+        }
+      } catch (error) {
+        console.log("Erreur lors de la récupération du type:", error);
+      } finally {
         setLoading(false);
-        console.log("voici le type editer", editType);
-        console.log("voici le", editedType);
-        setEditType(editedType);
-      };
-      loadTypeForEditing();
-    } catch (error) {
-      console.log(error.message);
+      }
+    };
+
+    getTypeForEditing(itemId);
+  }, [database, itemId, editMode]);
+
+  // Fonction pour rendre le contenu du bottom sheet
+  const renderBottomSheetContent = () => {
+    if (editMode && !loading) {
+      // Mode édition
+      switch (editType) {
+        case "Meeting":
+          return (
+            <MeetingSchedule
+              bottomSheetRef={bottomSheetRef}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              scheduleIdForEditing={itemId}
+              bottomSheetType={"Meeting"}
+            />
+          );
+        case "appointment":
+          return (
+            <AppointmentSchedule
+              bottomSheetRef={bottomSheetRef}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              scheduleIdForEditing={itemId}
+              bottomSheetType={"Appointment"}
+            />
+          );
+        case "event":
+          return (
+            <EventSchedule
+              bottomSheetRef={bottomSheetRef}
+              bottomSheetType={"Event"}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              scheduleIdForEditing={itemId}
+            />
+          );
+        case "tracker":
+          return (
+            <TrackerSchedule
+              bottomSheetRef={bottomSheetRef}
+              bottomSheetType={"Tracker"}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              scheduleIdForEditing={itemId}
+            />
+          );
+        case "deadline":
+          return (
+            <DeadLineSchedule
+              bottomSheetRef={bottomSheetRef}
+              bottomSheetType={"Dealine"}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              scheduleIdForEditing={itemId}
+            />
+          );
+        default:
+          return (
+            <View style={{ padding: 20 }}>
+              <Text>Type élément non reconnu: {editType}</Text>
+            </View>
+          );
+      }
     }
-  }, [database, loading]);
-  console.log(editType);
+
+    if (editMode && loading) {
+      return (
+        <View style={{ padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
+    // Mode création
+    switch (bottomSheetType) {
+      case "Meeting":
+        return (
+          <MeetingSchedule
+            bottomSheetRef={bottomSheetRef}
+            editMode={editMode}
+            setEditMode={setEditMode}
+            scheduleIdForEditing={itemId}
+          />
+        );
+      case "Appointment":
+        return (
+          <AppointmentSchedule
+            bottomSheetRef={bottomSheetRef}
+            bottomSheetType={bottomSheetType}
+            editMode={editMode}
+            setEditMode={setEditMode}
+          />
+        );
+      case "Event":
+        return (
+          <EventSchedule
+            bottomSheetRef={bottomSheetRef}
+            bottomSheetType={bottomSheetType}
+            editMode={editMode}
+            setEditMode={setEditMode}
+          />
+        );
+      case "Tracker":
+        return (
+          <TrackerSchedule
+            bottomSheetRef={bottomSheetRef}
+            bottomSheetType={bottomSheetType}
+            editMode={editMode}
+            setEditMode={setEditMode}
+          />
+        );
+      case "Deadline":
+        return (
+          <DeadLineSchedule
+            bottomSheetRef={bottomSheetRef}
+            bottomSheetType={bottomSheetType}
+            editMode={editMode}
+            setEditMode={setEditMode}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  console.log("États actuels:", {
+    editMode,
+    editType,
+    loading,
+    bottomSheetType,
+    itemId,
+  });
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -86,18 +232,24 @@ export default function Index() {
               marginLeft: 20,
             }}
           >
-            Agenda du jour
+            Agenda
           </Text>
           <ScheduleWrapper
             setEditMode={setEditMode}
             openBottomSheet={openBottomSheet}
-            setEditItem={setEditItem}
+            setEditItem={setItemId}
           />
         </ScrollView>
 
+        {/* Overlay pour le floating button et bottom sheet */}
         {(floatingActionButtonIsOpen || bottomSheetLevel === 0) && (
           <Pressable
-            onPress={() => setFloatingActionButtonState(false)}
+            onPress={() => {
+              setFloatingActionButtonState(false);
+              if (bottomSheetLevel === 0) {
+                closeBottomSheet();
+              }
+            }}
             style={{
               zIndex: 0,
               position: "absolute",
@@ -111,6 +263,7 @@ export default function Index() {
           />
         )}
 
+        {/* Floating Action Button */}
         {floatingButtonVisibility && (
           <CreateScheduleButton
             isOpen={floatingActionButtonIsOpen}
@@ -122,14 +275,18 @@ export default function Index() {
           />
         )}
 
+        {/* Bottom Sheet */}
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={
-            bottomSheetType === "Meeting" ? [snapPoints[0]] : [snapPoints[1]]
+            (editMode && editType === "Meeting") ||
+            bottomSheetType === "Meeting"
+              ? [snapPoints[0]]
+              : [snapPoints[1]]
           }
           index={bottomSheetLevel}
           enablePanDownToClose={true}
-          onClose={() => closeBottomSheet()}
+          onClose={closeBottomSheet}
           backgroundStyle={{ backgroundColor: "white" }}
           enableDynamicSizing={false}
           style={{ zIndex: 2 }}
@@ -140,50 +297,7 @@ export default function Index() {
           }}
           nestedScrollEnabled={true}
         >
-          {editMode ? (
-            <View>{!loading && <Text>{editItem}</Text>}</View>
-          ) : (
-            bottomSheetType === "Meeting" && (
-              <MeetingSchedule
-                bottomSheetRef={bottomSheetRef}
-                bottomSheetType={bottomSheetType}
-                editMode={editMode}
-                setEditMode={setEditMode}
-              />
-            )
-          )}
-          {bottomSheetType === "Appointment" && (
-            <AppointmentSchedule
-              bottomSheetRef={bottomSheetRef}
-              bottomSheetType={bottomSheetType}
-              editMode={editMode}
-              setEditMode={setEditMode}
-            />
-          )}
-          {bottomSheetType === "Event" && (
-            <EventSchedule
-              bottomSheetRef={bottomSheetRef}
-              bottomSheetType={bottomSheetType}
-              editMode={editMode}
-              setEditMode={setEditMode}
-            />
-          )}
-          {bottomSheetType === "Tracker" && (
-            <TrackerSchedule
-              bottomSheetRef={bottomSheetRef}
-              bottomSheetType={bottomSheetType}
-              editMode={editMode}
-              setEditMode={setEditMode}
-            />
-          )}
-          {bottomSheetType === "Deadline" && (
-            <DeadLineSchedule
-              bottomSheetRef={bottomSheetRef}
-              bottomSheetType={bottomSheetType}
-              editMode={editMode}
-              setEditMode={setEditMode}
-            />
-          )}
+          {renderBottomSheetContent()}
         </BottomSheet>
       </SafeAreaView>
     </GestureHandlerRootView>

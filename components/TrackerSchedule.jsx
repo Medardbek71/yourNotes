@@ -16,7 +16,13 @@ import { ScrollView } from "react-native-gesture-handler";
 import ToggleSwitch from "toggle-switch-react-native";
 import ScheduleHeader from "./ScheduleHeader";
 
-const TrackerSchedule = ({ bottomSheetRef, bottomSheetType }) => {
+const TrackerSchedule = ({
+  bottomSheetRef,
+  bottomSheetType,
+  editMode,
+  setEditMode,
+  scheduleIdForEditing,
+}) => {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState(new Date());
   const [repeat, setRepeat] = useState(false);
@@ -46,6 +52,7 @@ const TrackerSchedule = ({ bottomSheetRef, bottomSheetType }) => {
       minute: "2-digit",
     });
   };
+  console.log(time.toLocaleDateString());
 
   const onTimePickerChange = (event, selectedTime) => {
     if (event.type === "set") {
@@ -68,7 +75,7 @@ const TrackerSchedule = ({ bottomSheetRef, bottomSheetType }) => {
     try {
       await database.runAsync(
         `INSERT INTO schedule (title, description, time, trackedDay, type) VALUES (?,?,?,?,?)`,
-        [title, description, time.toTimeString(), storedDays, "tracker"]
+        [title, description, time.toLocaleTimeString(), storedDays, "tracker"]
       );
       console.log("données dans la db");
       alert("données dans la db");
@@ -93,6 +100,7 @@ const TrackerSchedule = ({ bottomSheetRef, bottomSheetType }) => {
         saveSchedule={saveTracker}
         resetAll={resetAll}
         bottomSheetType={bottomSheetType}
+        editMode={editMode}
       />
       <View style={styles.textInput}>
         <Text style={styles.label}>Title</Text>

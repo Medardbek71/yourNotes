@@ -13,7 +13,13 @@ import { ScrollView } from "react-native-gesture-handler";
 import CardForSchedule from "./CardForSchedule";
 import ScheduleHeader from "./ScheduleHeader";
 
-const Appointment = ({ bottomSheetRef, bottomSheetType }) => {
+const Appointment = ({
+  bottomSheetRef,
+  bottomSheetType,
+  editMode,
+  setEditMode,
+  scheduleIdForEditing,
+}) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -96,6 +102,7 @@ const Appointment = ({ bottomSheetRef, bottomSheetType }) => {
         saveSchedule={saveAppointment}
         resetAll={resetAll}
         bottomSheetType={bottomSheetType}
+        editMode={editMode}
       />
       <View>
         <Text style={styles.label}>Enter meeting title</Text>

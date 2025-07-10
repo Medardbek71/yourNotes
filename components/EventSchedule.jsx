@@ -14,7 +14,13 @@ import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
 import ScheduleHeader from "./ScheduleHeader";
 
-const EventSchedule = ({ bottomSheetRef, bottomSheetType }) => {
+const EventSchedule = ({
+  bottomSheetRef,
+  bottomSheetType,
+  editMode,
+  setEditMode,
+  scheduleIdForEditing,
+}) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -103,6 +109,7 @@ const EventSchedule = ({ bottomSheetRef, bottomSheetType }) => {
         saveSchedule={saveEvent}
         resetAll={resetAll}
         bottomSheetType={bottomSheetType}
+        editMode={editMode}
       />
       <View style={styles.textInput}>
         <Text style={styles.label}>Event title</Text>

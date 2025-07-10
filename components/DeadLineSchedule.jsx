@@ -13,7 +13,13 @@ import {
 import CardForSchedule from "./CardForSchedule";
 import ScheduleHeader from "./ScheduleHeader";
 
-const DeadLineSchedule = ({ bottomSheetRef, bottomSheetType }) => {
+const DeadLineSchedule = ({
+  bottomSheetRef,
+  bottomSheetType,
+  editMode,
+  setEditMode,
+  scheduleIdForEditing,
+}) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -96,6 +102,7 @@ const DeadLineSchedule = ({ bottomSheetRef, bottomSheetType }) => {
         saveSchedule={saveDeadline}
         resetAll={resetAll}
         bottomSheetType={bottomSheetType}
+        editMode={editMode}
       />
       <View style={styles.textInput}>
         <Text style={styles.label}>Title</Text>

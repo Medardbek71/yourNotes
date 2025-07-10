@@ -17,7 +17,12 @@ import CardForSchedule from "./CardForSchedule";
 import CollaboratorList from "./CollaboratorList";
 import ScheduleHeader from "./ScheduleHeader";
 
-const MeetingSchedule = ({ bottomSheetRef }) => {
+const MeetingSchedule = ({
+  bottomSheetRef,
+  editMode,
+  setEditMode,
+  scheduleIdForEditing,
+}) => {
   const [meetingTitle, setMeetingTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState(new Date());
   const [meetingTime, setMeetingTime] = useState(new Date());
@@ -113,6 +118,7 @@ const MeetingSchedule = ({ bottomSheetRef }) => {
         bottomSheetType={"Meeting"}
         saveSchedule={saveMeeting}
         resetAll={resetAll}
+        editMode={editMode}
       />
       <KeyboardAvoidingView
         style={styles.container}
@@ -247,6 +253,7 @@ const MeetingSchedule = ({ bottomSheetRef }) => {
             placeholder="Paste de meeting Link"
           />
         </View>
+        <View>{editMode && <Text>boutton Supprimer</Text>}</View>
       </KeyboardAvoidingView>
     </ScrollView>
   );

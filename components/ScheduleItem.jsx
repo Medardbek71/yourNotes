@@ -136,7 +136,7 @@ const ScheduleItem = ({ id, openBottomSheet, setEditMode, setEditItem }) => {
               }}
             >
               <Text style={{ fontFamily: "Inter-Regular" }}>
-                {schedule.date}
+                {schedule.date || schedule.time}
               </Text>
               <Text style={{ fontFamily: "Inter-Regular" }}>
                 {schedule.title}
