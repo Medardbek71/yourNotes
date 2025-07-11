@@ -68,7 +68,6 @@ export default function Index() {
 
         if (queryResult) {
           setEditType(queryResult.type);
-          console.log("Type récupéré:", queryResult.type);
         }
       } catch (error) {
         console.log("Erreur lors de la récupération du type:", error);
@@ -158,7 +157,7 @@ export default function Index() {
         return (
           <MeetingSchedule
             bottomSheetRef={bottomSheetRef}
-            editMode={editMode}
+            editMode={false}
             setEditMode={setEditMode}
             scheduleIdForEditing={itemId}
           />
@@ -204,19 +203,19 @@ export default function Index() {
     }
   };
 
-  console.log("États actuels:", {
-    editMode,
-    editType,
-    loading,
-    bottomSheetType,
-    itemId,
-  });
+  // console.log("États actuels:", {
+  //   editMode,
+  //   editType,
+  //   loading,
+  //   bottomSheetType,
+  //   itemId,
+  // });
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView
         style={{ backgroundColor: Colors.background.light, flex: 1 }}
-        edges={["top", "left", "right"]}
+        edges={["top", "left", "right", "bottom"]}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}

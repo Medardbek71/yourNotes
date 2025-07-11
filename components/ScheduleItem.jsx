@@ -155,6 +155,7 @@ const ScheduleItem = ({ id, openBottomSheet, setEditMode, setEditItem }) => {
                   elevation: 1,
                   borderRadius: 25,
                   fontFamily: "Inter-regular",
+                  marginBottom: 10,
                 }}
               >
                 <View
@@ -186,6 +187,7 @@ const ScheduleItem = ({ id, openBottomSheet, setEditMode, setEditItem }) => {
           backgroundColor: Colors.background.tertiary,
           marginLeft: 50,
           width: "75%",
+          // marginBottom: 50,
         }}
       ></View>
     </View>

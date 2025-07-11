@@ -1,7 +1,7 @@
 import Colors from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSQLiteContext } from "expo-sqlite";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -23,6 +23,11 @@ const MeetingSchedule = ({
   setEditMode,
   scheduleIdForEditing,
 }) => {
+  const database = useSQLiteContext();
+  const [loading, setLoading] = useState(false);
+  const [editData, setEditData] = useState(null);
+
+  // États initialisés avec des valeurs par défaut
   const [meetingTitle, setMeetingTitle] = useState("");
   const [meetingDate, setMeetingDate] = useState(new Date());
   const [meetingTime, setMeetingTime] = useState(new Date());
@@ -33,7 +38,54 @@ const MeetingSchedule = ({
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [collaboratorList, setCollaboratorList] = useState([]);
 
-  const database = useSQLiteContext();
+
+
+  // Mise à jour des états quand les données d'édition sont chargées
+  useEffect(() => {
+    console.log(editMode, editData);
+    if (editData && editMode) {
+      setMeetingTitle(editData.title || "");
+      setMeetingDescription(editData.description || "");
+      setMeetingPlace(editData.place || "");
+      setMeetingLink(editData.link || "");
+
+      // Gestion des dates et heures
+      if (editData.date) {
+        // Convertir la date stockée en objet Date
+        const dateParts = editData.date.split("/");
+        if (dateParts.length === 3) {
+          const [day, month, year] = dateParts;
+          setMeetingDate(new Date(year, month - 1, day));
+        }
+      }
+
+      if (editData.time) {
+        // Convertir l'heure stockée en objet Date
+        const timeParts = editData.time.split(":");
+        if (timeParts.length >= 2) {
+          const [hours, minutes] = timeParts;
+          const timeDate = new Date();
+          timeDate.setHours(parseInt(hours), parseInt(minutes));
+          setMeetingTime(timeDate);
+        }
+      }
+
+      // Gestion de la liste des collaborateurs
+      if (editData.collaboratorList) {
+        // Si c'est stocké en JSON string, le parser
+        try {
+          const collaborators =
+            typeof editData.collaboratorList === "string"
+              ? JSON.parse(editData.collaboratorList)
+              : editData.collaboratorList;
+          setCollaboratorList(collaborators || []);
+        } catch (error) {
+          console.log("Erreur lors du parsing des collaborateurs:", error);
+          setCollaboratorList([]);
+        }
+      }
+    }
+  }, [editData, editMode, database, loading]);
 
   const handlePress = (meetingPlace) => {
     setMeetingPlace(meetingPlace);
@@ -71,6 +123,13 @@ const MeetingSchedule = ({
     });
   };
 
+  const formatTime = (time) => {
+    return time.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   const resetAll = () => {
     setMeetingTitle("");
     setMeetingDescription("");
@@ -79,44 +138,106 @@ const MeetingSchedule = ({
     setMeetingLink("");
     setCollaboratorList([]);
     setMeetingPlace("");
+    setEditData(null);
+    setEditMode(false);
     bottomSheetRef.current.close();
   };
-
-  const formatTime = (date) => {
-    return date.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const saveMeeting = () => {
+  const saveMeeting = async () => {
     try {
-      database.runAsync(
-        `INSERT INTO schedule (title , description , time , date , link ,place, collaboratorList ,type ) VALUES (?,?,?,?,?,?,?,?)`,
-        [
-          meetingTitle,
-          meetingDescription,
-          meetingTime,
-          meetingDate,
-          meetingLink,
-          meetingPlace,
-          collaboratorList,
-          "Meeting",
-        ]
-      );
+      const collaboratorListString = JSON.stringify(collaboratorList);
 
-      console.log("enregistrement de la reunion en base de donnée reussi");
+      if (editMode && editData) {
+        // Mode édition - mise à jour
+        await database.runAsync(
+          `UPDATE schedule SET title = ?, description = ?, time = ?, date = ?, link = ?, place = ?, collaboratorList = ? WHERE id = ?`,
+          [
+            meetingTitle,
+            meetingDescription,
+            meetingTime.toLocaleTimeString(),
+            meetingDate.toLocaleDateString(),
+            meetingLink,
+            meetingPlace,
+            collaboratorListString,
+            editData.id,
+          ]
+        );
+        console.log("Mise à jour de la réunion réussie");
+      } else {
+        // Mode création - insertion
+        await database.runAsync(
+          `INSERT INTO schedule (title, description, time, date, link, place, collaboratorList, type) VALUES (?,?,?,?,?,?,?,?)`,
+          [
+            meetingTitle,
+            meetingDescription,
+            meetingTime.toLocaleTimeString(),
+            meetingDate.toLocaleDateString(),
+            meetingLink,
+            meetingPlace,
+            collaboratorListString,
+            "Meeting",
+          ]
+        );
+        console.log("Enregistrement de la réunion réussi");
+      }
+
       resetAll();
     } catch (error) {
-      console.log(error);
+      console.log("Erreur lors de la sauvegarde:", error);
     }
   };
+
+  const updateMeeting = async () => {
+    if (editData && editData) {
+      try {
+        await database.runAsync(
+          "UPDATE schedule SET title = ?, description = ?, time = ?, date = ?, link = ?, place = ?, collaboratorList = ?, type = ?  WHERE id = ?",
+          [
+            meetingTitle,
+            meetingDescription,
+            meetingTime.toLocaleTimeString(),
+            meetingDate.toLocaleDateString(),
+            meetingLink,
+            meetingPlace,
+            collaboratorList,
+            "Meeting",
+            editData.id,
+          ]
+        );
+        console.log("modification reussite dans la db");
+        resetAll();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const deleteMeeting = async () => {
+    if (editMode && editData) {
+      try {
+        await database.runAsync("DELETE FROM schedule WHERE id = ?", [
+          editData.id,
+        ]);
+        console.log("Suppression de la réunion réussie");
+        resetAll();
+      } catch (error) {
+        console.log("Erreur lors de la suppression:", error);
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Chargement...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView>
       <ScheduleHeader
         bottomSheetType={"Meeting"}
-        saveSchedule={saveMeeting}
+        firstAction={() => (editMode ? updateMeeting() : saveMeeting())}
         resetAll={resetAll}
         editMode={editMode}
       />
@@ -155,6 +276,7 @@ const MeetingSchedule = ({
             />
           )}
         </View>
+
         <CollaboratorList
           collaboratorList={collaboratorList}
           setCollaboratorList={setCollaboratorList}
@@ -179,6 +301,7 @@ const MeetingSchedule = ({
             />
           )}
         </View>
+
         <View style={styles.textInput}>
           <Text style={styles.label}>Description</Text>
           <TextInput
@@ -190,6 +313,7 @@ const MeetingSchedule = ({
             numberOfLines={3}
           />
         </View>
+
         <View style={styles.textInput}>
           <Text style={styles.label}>Meeting type</Text>
           <View
@@ -240,10 +364,12 @@ const MeetingSchedule = ({
             </TouchableOpacity>
           </View>
         </View>
+
         <View>
           <Text style={styles.label}>Attach note</Text>
           <CardForSchedule />
         </View>
+
         <View>
           <Text style={styles.label}>Link</Text>
           <TextInput
@@ -253,7 +379,17 @@ const MeetingSchedule = ({
             placeholder="Paste de meeting Link"
           />
         </View>
-        <View>{editMode && <Text>boutton Supprimer</Text>}</View>
+
+        <View>
+          {editMode && (
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={deleteMeeting}
+            >
+              <Text style={styles.deleteButtonText}>Supprimer</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </KeyboardAvoidingView>
     </ScrollView>
   );
@@ -267,6 +403,11 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#fff",
     marginBottom: 70,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   textInput: {
     marginBottom: 20,
@@ -304,5 +445,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: Colors?.background?.secondary || "#007AFF",
+  },
+  deleteButton: {
+    backgroundColor: "#FF3B30",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  deleteButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

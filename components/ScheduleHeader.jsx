@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const ScheduleHeader = ({
   bottomSheetType,
-  saveSchedule,
+  firstAction,
   resetAll,
   editMode,
 }) => {
@@ -50,7 +50,7 @@ const ScheduleHeader = ({
           />
           <Text style={{ fontFamily: "Inter-Regular" }}>{bottomSheetType}</Text>
         </View>
-        <Pressable onPress={() => saveSchedule()}>
+        <Pressable onPress={() => firstAction()}>
           {editMode ? (
             <Text style={{ fontFamily: "Inter-Regular" }}>Update</Text>
           ) : (

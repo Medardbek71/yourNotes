@@ -3,7 +3,7 @@ import TrackingDays from "@/components/TrackingDays";
 import Colors from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSQLiteContext } from "expo-sqlite";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -23,6 +23,29 @@ const TrackerSchedule = ({
   setEditMode,
   scheduleIdForEditing,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [editData, setEditData] = useState(null);
+
+  // Mise à jour des états quand les données d'édition sont chargées
+  useEffect(() => {
+    console.log(editMode, editData);
+    if (editData && editMode) {
+      setTitle(editData.title || "");
+      setDescription(editData.description || "");
+
+      if (editData.time) {
+        // Convertir l'heure stockée en objet Date
+        const timeParts = editData.time.split(":");
+        if (timeParts.length >= 2) {
+          const [hours, minutes] = timeParts;
+          const timeDate = new Date();
+          timeDate.setHours(parseInt(hours), parseInt(minutes));
+          setTime(timeDate);
+        }
+      }
+    }
+  }, [editData, editMode, database, loading]);
+
   const [title, setTitle] = useState("");
   const [time, setTime] = useState(new Date());
   const [repeat, setRepeat] = useState(false);
@@ -52,7 +75,6 @@ const TrackerSchedule = ({
       minute: "2-digit",
     });
   };
-  console.log(time.toLocaleDateString());
 
   const onTimePickerChange = (event, selectedTime) => {
     if (event.type === "set") {
@@ -64,6 +86,10 @@ const TrackerSchedule = ({
     } else if (event.type === "dismissed") {
       setShowTimePicker(false);
     }
+  };
+
+  const updateTracker = () => {
+    alert("Moussa diaby");
   };
 
   const selectedDays = {
@@ -97,7 +123,7 @@ const TrackerSchedule = ({
   return (
     <ScrollView style={styles.container}>
       <ScheduleHeader
-        saveSchedule={saveTracker}
+        firstAction={() => (editMode ? updateTracker() : saveTracker())}
         resetAll={resetAll}
         bottomSheetType={bottomSheetType}
         editMode={editMode}

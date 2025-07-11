@@ -1,6 +1,6 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSQLiteContext } from "expo-sqlite";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -20,6 +20,64 @@ const Appointment = ({
   setEditMode,
   scheduleIdForEditing,
 }) => {
+  const database = useSQLiteContext();
+  const [loading, setLoading] = useState(false);
+  const [editData, setEditData] = useState(null);
+
+  // Chargement des données en mode édition
+  useEffect(() => {
+    if (editMode && scheduleIdForEditing) {
+      const loadData = async () => {
+        try {
+          setLoading(true);
+          const queryResults = await database.getAllAsync(
+            "SELECT * FROM schedule WHERE id = ?",
+            [scheduleIdForEditing]
+          );
+
+          if (queryResults.length > 0) {
+            setEditData(queryResults[0]); // Prendre le premier résultat
+          }
+        } catch (error) {
+          console.log("Erreur lors du chargement des données:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadData();
+    }
+  }, [editMode, scheduleIdForEditing, database]);
+
+  // Mise à jour des états quand les données d'édition sont chargées
+  useEffect(() => {
+    console.log(editMode, editData);
+    if (editData && editMode) {
+      setTitle(editData.title || "");
+      setDescription(editData.description || "");
+
+      // Gestion des dates et heures
+      if (editData.date) {
+        // Convertir la date stockée en objet Date
+        const dateParts = editData.date.split("/");
+        if (dateParts.length === 3) {
+          const [day, month, year] = dateParts;
+          setDate(new Date(year, month - 1, day));
+        }
+      }
+
+      if (editData.time) {
+        // Convertir l'heure stockée en objet Date
+        const timeParts = editData.time.split(":");
+        if (timeParts.length >= 2) {
+          const [hours, minutes] = timeParts;
+          const timeDate = new Date();
+          timeDate.setHours(parseInt(hours), parseInt(minutes));
+          setTime(timeDate);
+        }
+      }
+    }
+  }, [editData, editMode, database, loading]);
+
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -27,8 +85,6 @@ const Appointment = ({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [attachedNotesVisibility, setAttachedNotesVisibility] = useState(false);
-
-  const database = useSQLiteContext();
 
   const onDatePickerChange = (event, selectedDate) => {
     if (event.type === "set") {
@@ -69,6 +125,28 @@ const Appointment = ({
     });
   };
 
+  const updateAppointment = async () => {
+    if (editData && editData) {
+      try {
+        await database.runAsync(
+          "UPDATE schedule SET title = ?, description = ?, time = ?, date = ?, type = ?  WHERE id = ?",
+          [
+            title,
+            description,
+            time.toLocaleTimeString(),
+            date.toLocaleDateString(),
+            "appointment",
+            editData.id,
+          ]
+        );
+        console.log("modification reussite dans la db");
+        resetAll();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const saveAppointment = () => {
     try {
       database.runAsync(
@@ -99,7 +177,7 @@ const Appointment = ({
   return (
     <ScrollView style={styles.container}>
       <ScheduleHeader
-        saveSchedule={saveAppointment}
+        firstAction={() => (editMode ? updateAppointment() : saveAppointment())}
         resetAll={resetAll}
         bottomSheetType={bottomSheetType}
         editMode={editMode}
