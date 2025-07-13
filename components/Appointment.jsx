@@ -129,14 +129,13 @@ const Appointment = ({
     if (editData && editData) {
       try {
         await database.runAsync(
-          "UPDATE schedule SET title = ?, description = ?, time = ?, date = ?, type = ?  WHERE id = ?",
+          "UPDATE schedule SET title = ?, description = ?, time = ?, date = ? WHERE id = ?",
           [
             title,
             description,
             time.toLocaleTimeString(),
             date.toLocaleDateString(),
-            "appointment",
-            editData.id,
+            scheduleIdForEditing,
           ]
         );
         console.log("modification reussite dans la db");
@@ -150,13 +149,12 @@ const Appointment = ({
   const saveAppointment = () => {
     try {
       database.runAsync(
-        `INSERT INTO schedule (title , description , date , time , type ) VALUES (?,?,?,?,?)`,
+        `INSERT INTO schedule (title , description , date , time ) VALUES (?,?,?,?)`,
         [
           title,
           description,
-          date.toDateString(),
-          time.toTimeString(),
-          "appointment",
+          date.toLocaleDateString(),
+          time.toLocaleTimeString(),
         ]
       );
       resetAll();

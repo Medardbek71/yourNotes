@@ -13,11 +13,12 @@ const ScheduleWrapper = ({ setEditMode, openBottomSheet, setEditItem }) => {
       try {
         const data = await database.getAllAsync(`SELECT * FROM schedule `);
         console.log("voici les data en question", data);
-        setLoading(false);
         setScheduleData(data);
         console.log(scheduleData);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     }
     loadData();

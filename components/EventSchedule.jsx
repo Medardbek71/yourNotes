@@ -148,10 +148,10 @@ const EventSchedule = ({
   const saveEvent = () => {
     try {
       database.runAsync(
-        `INSERT INTO schedule ( title , date ,time , collaboratorList , type) VALUES (?,?,?,?,?)`,
+        `INSERT INTO schedule (title , date ,time , collaboratorList , type) VALUES (?,?,?,?,?)`,
         [
           title,
-          date.toLocaleString(),
+          date.toLocaleDateString(),
           time.toLocaleTimeString(),
           collaboratorList,
           "event",
@@ -177,14 +177,13 @@ const EventSchedule = ({
     if (editData && editData) {
       try {
         await database.runAsync(
-          "UPDATE schedule SET title = ?, time = ?, date = ?,  collaboratorList = ?, type = ?  WHERE id = ?",
+          "UPDATE schedule SET title = ?, time = ?, date = ?,  collaboratorList = ?  WHERE id = ?",
           [
             title,
             time.toLocaleTimeString(),
             date.toLocaleDateString(),
             collaboratorList,
-            "event",
-            editData.id,
+            scheduleIdForEditing,
           ]
         );
         console.log("modification reussite dans la db");

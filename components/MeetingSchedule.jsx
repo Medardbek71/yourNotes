@@ -38,12 +38,37 @@ const MeetingSchedule = ({
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [collaboratorList, setCollaboratorList] = useState([]);
 
-
-
   // Mise à jour des états quand les données d'édition sont chargées
+  console.log(editMode, editData);
+  console.log(scheduleIdForEditing);
+
+  // Chargement des données en mode édition
   useEffect(() => {
-    console.log(editMode, editData);
+    if (editMode && scheduleIdForEditing) {
+      const loadData = async () => {
+        try {
+          setLoading(true);
+          const queryResults = await database.getAllAsync(
+            "SELECT * FROM schedule WHERE id = ?",
+            [scheduleIdForEditing]
+          );
+
+          if (queryResults.length > 0) {
+            setEditData(queryResults[0]); // Prendre le premier résultat
+          }
+        } catch (error) {
+          console.log("Erreur lors du chargement des données:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadData();
+    }
+  }, [editMode, scheduleIdForEditing, database]);
+
+  useEffect(() => {
     if (editData && editMode) {
+      console.log(scheduleIdForEditing);
       setMeetingTitle(editData.title || "");
       setMeetingDescription(editData.description || "");
       setMeetingPlace(editData.place || "");
@@ -158,7 +183,7 @@ const MeetingSchedule = ({
             meetingLink,
             meetingPlace,
             collaboratorListString,
-            editData.id,
+            scheduleIdForEditing,
           ]
         );
         console.log("Mise à jour de la réunion réussie");
@@ -200,7 +225,7 @@ const MeetingSchedule = ({
             meetingPlace,
             collaboratorList,
             "Meeting",
-            editData.id,
+            scheduleIdForEditing,
           ]
         );
         console.log("modification reussite dans la db");

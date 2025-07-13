@@ -202,15 +202,6 @@ export default function Index() {
         return null;
     }
   };
-
-  // console.log("États actuels:", {
-  //   editMode,
-  //   editType,
-  //   loading,
-  //   bottomSheetType,
-  //   itemId,
-  // });
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView

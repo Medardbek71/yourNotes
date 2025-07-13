@@ -26,12 +26,40 @@ const TrackerSchedule = ({
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(null);
 
+  // Chargement des données en mode édition
+  useEffect(() => {
+    if (editMode && scheduleIdForEditing) {
+      console.log(scheduleIdForEditing);
+      const loadData = async () => {
+        try {
+          setLoading(true);
+          const queryResults = await database.getAllAsync(
+            "SELECT * FROM schedule WHERE id = ?",
+            [scheduleIdForEditing]
+          );
+
+          if (queryResults.length > 0) {
+            setEditData(queryResults[0]); // Prendre le premier résultat
+          }
+        } catch (error) {
+          console.log("Erreur lors du chargement des données:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadData();
+    }
+  }, [editMode, scheduleIdForEditing, database]);
+
   // Mise à jour des états quand les données d'édition sont chargées
   useEffect(() => {
     console.log(editMode, editData);
     if (editData && editMode) {
       setTitle(editData.title || "");
       setDescription(editData.description || "");
+      const editTrackedDay = JSON.parse(editData.trackedDay);
+      setRepeat(editTrackedDay.repeat);
+      setTrackedDay(editTrackedDay.daysSelected);
 
       if (editData.time) {
         // Convertir l'heure stockée en objet Date
@@ -88,8 +116,23 @@ const TrackerSchedule = ({
     }
   };
 
-  const updateTracker = () => {
-    alert("Moussa diaby");
+  const updateTracker = async () => {
+    try {
+      await database.runAsync(
+        "UPDATE schedule SET title = ?, time = ?, description = ? , trackedDay = ? WHERE id = ?",
+        [
+          title,
+          time.toLocaleTimeString(),
+          description,
+          storedDays,
+          scheduleIdForEditing,
+        ]
+      );
+      console.log("modification reussite dans la db");
+      resetAll();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const selectedDays = {
